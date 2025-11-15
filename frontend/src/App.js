@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import "./App.css";
 
 function App() {
-  const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState(null);
   const [searchLoading, setSearchLoading] = useState(false);
@@ -11,24 +10,6 @@ function App() {
   const [nowPlayingMovies, setNowPlayingMovies] = useState([]);
   const [nowPlayingLoading, setNowPlayingLoading] = useState(false);
 
-  
-  useEffect(() => {
-    async function fetchMovies() {
-      try {
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/movie`);
-        if (!res.ok) throw new Error("Network error");
-        const data = await res.json();
-        setMovies(data);
-      } catch (err) {
-        console.error("Error fetching movies:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchMovies();
-  }, []);
-
-  
   const handleSearch = async () => {
     if (!searchTerm.trim()) {
       setSearchResults(null);
@@ -55,21 +36,20 @@ function App() {
       }
 
       if (!res.ok) {
-        throw new Error("Server error");
+        throw new Error("Serveer error");
       }
 
       const data = await res.json();
       setSearchResults(data);
     } catch (err) {
       console.error("Error searching movies:", err);
-      setSearchError("Failed to search movies. Please try again.");
+      setSearchError("Failed to search movies.Please try again.");
       setSearchResults(null);
     } finally {
       setSearchLoading(false);
     }
   };
 
- 
   const handleNowPlaying = async () => {
     setNowPlayingLoading(true);
     setSearchResults(null);
@@ -91,14 +71,12 @@ function App() {
     }
   };
 
- 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       handleSearch();
     }
   };
 
-  
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
@@ -109,47 +87,26 @@ function App() {
     }
   };
 
-  
-  const displayMovies = showNowPlaying ? nowPlayingMovies : (searchResults || movies);
-  const isTMDbResults = searchResults !== null || showNowPlaying;
-  const isLocalResults = !isTMDbResults;
-
-  if (loading && isLocalResults) return <p>Ladataan elokuvia…</p>;
+  const displayMovies = showNowPlaying ? nowPlayingMovies : (searchResults || []);
 
   return (
-    <div style={{ maxWidth: 900, margin: "2rem auto", fontFamily: "sans-serif", padding: "0 1rem" }}>
+    <div className="app-container">
       <h1>Elokuvat</h1>
 
-      {/* Search Section */}
-      <div style={{ marginBottom: "2rem", padding: "1rem", backgroundColor: "#f5f5f5", borderRadius: "4px" }}>
-        <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
+      <div className="search-section">
+        <div className="search-input-row">
           <input
             type="text"
             placeholder="Search movies…"
             value={searchTerm}
             onChange={handleSearchChange}
             onKeyPress={handleKeyPress}
-            style={{
-              flex: 1,
-              padding: "0.5rem",
-              fontSize: "1rem",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-            }}
+            className="search-input"
           />
           <button
             onClick={handleSearch}
             disabled={searchLoading}
-            style={{
-              padding: "0.5rem 1.5rem",
-              fontSize: "1rem",
-              backgroundColor: "#007bff",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: searchLoading ? "not-allowed" : "pointer",
-              opacity: searchLoading ? 0.6 : 1,
-            }}
+            className="btn btn-primary"
           >
             {searchLoading ? "Searching…" : "Search"}
           </button>
@@ -158,17 +115,7 @@ function App() {
         <button
           onClick={handleNowPlaying}
           disabled={nowPlayingLoading}
-          style={{
-            padding: "0.5rem 1.5rem",
-            fontSize: "1rem",
-            backgroundColor: "#28a745",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            cursor: nowPlayingLoading ? "not-allowed" : "pointer",
-            opacity: nowPlayingLoading ? 0.6 : 1,
-            marginRight: "0.5rem",
-          }}
+          className="btn btn-success"
         >
           {nowPlayingLoading ? "Loading…" : "Now in Theaters"}
         </button>
@@ -182,67 +129,50 @@ function App() {
               setShowNowPlaying(false);
               setNowPlayingMovies([]);
             }}
-            style={{
-              padding: "0.5rem 1rem",
-              fontSize: "1rem",
-              backgroundColor: "#6c757d",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-            }}
+            className="btn btn-secondary"
           >
             Clear
           </button>
         )}
 
-        {searchError && <p style={{ color: "red", marginTop: "0.5rem" }}>{searchError}</p>}
+        {searchError && <p className="error-message">{searchError}</p>}
       </div>
 
-      {/* Results Section */}
-      {isTMDbResults && (
-        <div style={{ marginBottom: "2rem" }}>
+      {(searchResults !== null || showNowPlaying) && (
+        <div className="results-heading">
           <h2>{showNowPlaying ? "Now in Theaters" : "Search Results"}</h2>
         </div>
       )}
 
       {displayMovies.length === 0 ? (
-        <p>{isTMDbResults ? "No movies found." : "Ei elokuvia löytynyt."}</p>
+        <p className="no-results-message">No movies found.</p>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "1rem" }}>
+        <div className="movies-grid">
           {displayMovies.map((m) => (
-            <div
-              key={m.id}
-              style={{
-                border: "1px solid #ddd",
-                borderRadius: "4px",
-                padding: "1rem",
-                backgroundColor: "#fff",
-              }}
-            >
+            <div key={m.id} className="movie-card">
               {m.poster_path && (
                 <img
                   src={`https://image.tmdb.org/t/p/w200${m.poster_path}`}
                   alt={m.title}
-                  style={{ width: "100%", height: "auto", marginBottom: "0.5rem", borderRadius: "4px" }}
+                  className="movie-poster"
                 />
               )}
-              <h3 style={{ marginTop: 0, fontSize: "1rem" }}>{m.title}</h3>
-              <p style={{ fontSize: "0.9rem", color: "#666" }}>
+              <h3 className="movie-title">{m.title}</h3>
+              <p className="movie-year">
                 {m.year || m.release_date ? new Date(m.release_date || m.year).getFullYear() : "N/A"}
               </p>
               {m.overview && (
-                <p style={{ fontSize: "0.85rem", color: "#555", marginBottom: 0 }}>
+                <p className="movie-description">
                   {m.overview.substring(0, 100)}...
                 </p>
               )}
               {!m.overview && m.director && (
-                <p style={{ fontSize: "0.85rem", color: "#555", marginBottom: 0 }}>
+                <p className="movie-description">
                   Director: {m.director}
                 </p>
               )}
               {!m.overview && m.genre && (
-                <p style={{ fontSize: "0.85rem", color: "#555" }}>
+                <p className="movie-description">
                   Genre: {m.genre}
                 </p>
               )}
