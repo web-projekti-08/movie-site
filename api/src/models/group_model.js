@@ -18,8 +18,8 @@ export async function createGroup(userId, groupName, description) {
 
   const groupId = result.rows[0].group_id;
   await pool.query(`
-    INSERT INTO group_members (group_id, user_id, role)
-    VALUES ($1, $2, 'owner')`,
+    INSERT INTO group_members (group_id, user_id, role, joined_at)
+    VALUES ($1, $2, 'owner', NOW())`,
     [groupId, userId]
   );
 
@@ -59,8 +59,8 @@ export async function getGroupMembers(groupId) {
 
 export async function isOwner(groupId, userId) {
   const result = await pool.query(`
-    SELECT user_id FROM group_members
-    WHERE role = 'owner' AND group_id = $1 AND user_id = $2`, [groupId, userId]);
+    SELECT owner_id FROM groups
+    WHERE group_id = $1 AND owner_id = $2`, [groupId, userId]);
   return result.rows;
 }
 
@@ -101,7 +101,7 @@ export async function getJoinRequests(groupId) {
 export async function acceptJoinRequest(groupId, userId) {
   const result = await pool.query(`
     UPDATE group_members 
-    SET role = 'member' 
+    SET role = 'member', joined_at = NOW()
     WHERE group_id = $1 AND user_id = $2 AND role = 'requested'
     RETURNING *`, [groupId, userId]);
   return result.rows[0];

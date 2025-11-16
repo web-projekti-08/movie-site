@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users (
   user_id SERIAL PRIMARY KEY,
   email VARCHAR(255) UNIQUE NOT NULL,
-	password VARCHAR(255) NOT NULL
+  password VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE groups (
@@ -21,6 +21,7 @@ CREATE TABLE group_members (
 	group_id INT REFERENCES groups(group_id) ON DELETE CASCADE,
 	user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
 	role member_role NOT NULL,
+  joined_at TIMESTAMP,
 	PRIMARY KEY (group_id, user_id)
 );
 
@@ -28,14 +29,14 @@ CREATE TABLE group_content (
 	content_id SERIAL PRIMARY KEY,
 	group_id INT REFERENCES groups(group_id) ON DELETE CASCADE,
 	--movie_id is TMDB id, figure out the best way to use this
-    media_id INT
+  media_id INT NOT NULL
 );
 
 CREATE TABLE group_chat (
 	post_id SERIAL PRIMARY KEY,
 	user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
 	group_id INT REFERENCES groups(group_id) ON DELETE CASCADE,
-	post_text TEXT,
+	post_text TEXT NOT NULL,
 	post_date TIMESTAMP DEFAULT NOW()
 );
 

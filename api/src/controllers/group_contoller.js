@@ -57,7 +57,6 @@ export async function getGroupMembers(req, res, next) {
   }
 }
 
-// Do i need this?
 export async function isOwner(req, res, next) {
   try {
     const result = await GroupModel.isOwner(req.params.groupId, req.body.userId);
@@ -66,7 +65,7 @@ export async function isOwner(req, res, next) {
     next(err);
   }
 }
-// Do i need this?
+
 export async function isMember(req, res, next) {
   try {
     const result = await GroupModel.isMember(req.params.groupId, req.body.userId);

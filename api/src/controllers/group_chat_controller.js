@@ -2,8 +2,9 @@ import * as ChatModel from "../models/group_chat_model.js";
 
 export async function createPost(req, res, next) {
   try {
-    const { userId, text } = req.body;
-    const post = await ChatModel.createPost(req.params.groupId, userId, text);
+    const { text } = req.body;
+    // fix to req.user.userId after auth
+    const post = await ChatModel.createPost(req.params.groupId, 1, text);
     if (!post) {
       res.status(500).json({ error: "Failed to create post" });
     }
