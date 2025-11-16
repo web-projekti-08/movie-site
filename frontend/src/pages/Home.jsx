@@ -1,7 +1,7 @@
 import { useState } from "react";
-import "./App.css";
+import "../App.css";
 
-function App() {
+export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState(null);
   const [searchLoading, setSearchLoading] = useState(false);
@@ -183,5 +183,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
