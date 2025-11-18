@@ -1,6 +1,11 @@
 DROP TABLE IF EXISTS group_members CASCADE;
 DROP TABLE IF EXISTS groups CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS review CASCADE;
+DROP TABLE IF EXISTS favorite CASCADE;
+DROP TABLE IF EXISTS member_role CASCADE;
+DROP TABLE IF EXISTS group_content CASCADE;
+DROP TABLE IF EXISTS group_chat CASCADE;
 
 CREATE TABLE users (
   user_id SERIAL PRIMARY KEY,
@@ -37,9 +42,17 @@ CREATE TABLE group_chat (
 	user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
 	group_id INT REFERENCES groups(group_id) ON DELETE CASCADE,
 	post_text TEXT NOT NULL,
-	post_date TIMESTAMP DEFAULT NOW()
+    post_date TIMESTAMP DEFAULT NOW()
 );
 
+CREATE TABLE review (
+  review_id SERIAL PRIMARY KEY,
+  media_id INT NOT NULL,
+  user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+  review_text TEXT,
+  rating INT,
+  posted_at TIMESTAMP DEFAULT NOW()
+);
 
 -- TEST DATA
 INSERT INTO users (email, password) VALUES
@@ -64,3 +77,6 @@ INSERT INTO group_members (group_id, user_id, role) VALUES
 (3, 3, 'owner'),
 (3, 1, 'member'),
 (3, 4, 'requested');
+
+INSERT INTO review (media_id, user_id, review_text, rating, posted_at) VALUES
+(1, 1, 'Test review', 1, NOW());
