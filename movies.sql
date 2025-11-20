@@ -54,6 +54,13 @@ CREATE TABLE review (
   posted_at TIMESTAMP DEFAULT NOW()
 );
 
+CREATE TABLE favorite (
+  favorite_id SERIAL PRIMARY KEY,
+  user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+  media_id INT NOT NULL,
+  added_at TIMESTAMP DEFAULT NOW()
+);
+
 -- TEST DATA
 INSERT INTO users (email, password) VALUES
 ('alice@example.com', 'password123'),
