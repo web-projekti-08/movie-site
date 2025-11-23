@@ -1,40 +1,85 @@
+
+
 import pool from "../database.js";
-import bcrypt from "bcrypt";
 
-export async function createUsersTable() {
-  const query = `
-    CREATE TABLE IF NOT EXISTS users (
-      id SERIAL PRIMARY KEY,
-      email VARCHAR(255) UNIQUE NOT NULL,
-      password_hash VARCHAR(255) NOT NULL,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-  `;
-  try {
-    await pool.query(query);
-  } catch (err) {
-    console.error("Error creating users table:", err);
+import bcrypt from "bcryptjs";
+
+const SALT_ROUNDS = 10;
+
+export async function addOne(username, password) {
+  const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+  const result = await pool.query(
+    "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING username",
+    [username, hashedPassword]
+  );
+
+  return result.rows[0];
+}
+
+export async function getAll() {
+  const result = await pool.query("SELECT username FROM users");
+  return result.rows;
+}
+
+
+export async function authenticateUser(username, password) {
+  const result = await pool.query(
+    "SELECT username, password FROM users WHERE username = $1",
+    [username]
+  );
+
+  if (result.rows.length === 0) {
+    return null;
   }
+
+
+  const user = result.rows[0];
+  const isValid = await bcrypt.compare(password, user.password);
+
+  if (isValid) {
+    return { username: user.username };
+  }
+
+  return null;
 }
 
-export async function findUserByEmail(email) {
-  const query = "SELECT * FROM users WHERE email = $1";
-  const result = await pool.query(query, [email]);
+
+
+export async function saveRefreshToken(username, refreshToken) {
+  const result = await pool.query(
+    "UPDATE users SET refresh_token = $1 WHERE username = $2 RETURNING username",
+    [refreshToken, username]
+  );
+
   return result.rows[0];
 }
 
-export async function createUser(email, password) {
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const query = "INSERT INTO users (email, password_hash) VALUES ($1, $2) RETURNING id, email, created_at";
-  const result = await pool.query(query, [email, hashedPassword]);
+
+export async function getUserByRefreshToken(refreshToken) {
+  const result = await pool.query(
+    "SELECT username FROM users WHERE refresh_token = $1",
+    [refreshToken]
+  );
+
+  return result.rows.length > 0 ? result.rows[0] : null;
+}
+
+
+export async function clearRefreshToken(username) {
+  const result = await pool.query(
+    "UPDATE users SET refresh_token = NULL WHERE username = $1 RETURNING username",
+    [username]
+  );
+
   return result.rows[0];
 }
 
-export async function verifyPassword(password, passwordHash) {
-  return bcrypt.compare(password, passwordHash);
+export async function deleteUser(username) {
+  const result = await pool.query(
+    "DELETE FROM users WHERE username = $1 RETURNING username",
+    [username]
+  );
+
+  return result.rows[0];
 }
 
-export async function deleteUserById(userId) {
-  const query = "DELETE FROM users WHERE id = $1";
-  await pool.query(query, [userId]);
-}

@@ -1,10 +1,16 @@
 import { Router } from "express";
-import { signup, login, deleteAccount } from "../controllers/auth_controller.js";
+import { getUsers, addUser, login, refreshAccessToken, logout, deleteAccount } from "../controllers/auth_controller.js";
+import { authenticateToken } from "../middleware/auth.js";
 
-const router = Router();
+const userRouter = Router();
 
-router.post("/signup", signup);
-router.post("/login", login);
-router.delete("/delete", deleteAccount);
+userRouter.post("/register", addUser);
+userRouter.post("/login", login);
+userRouter.post("/refresh", refreshAccessToken);
+userRouter.post("/logout", logout);
 
-export default router;
+userRouter.get("/", authenticateToken, getUsers);
+userRouter.delete("/delete", authenticateToken, deleteAccount);
+
+export default userRouter;
+
