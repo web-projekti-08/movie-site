@@ -18,17 +18,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.get("/", (_req, res) => {
-  res.send("Postgres API (movie version)");
+  res.send("Postgress API (movie version)");
 });
 
-app.use("/movie", movieRouter);
+app.use("/movi", movieRouter);
 app.use("/groups", groupRouter);
 app.use("/user", userRouter);
 
 app.listen(port, () => {
-  console.log(`Server is listening port ${port}`);
+  console.log(`server is listening port ${port}`);
 });
 
-app.listen(port, () => {
-  console.log(`Server is listening port ${port}`);
-});

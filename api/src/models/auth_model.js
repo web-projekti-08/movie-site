@@ -9,7 +9,7 @@ const SALT_ROUNDS = 10;
 export async function addOne(username, password) {
   const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
   const result = await pool.query(
-    "INSERT INTO users (username, password) VALUES ($1, $2) RETURNING username",
+    "INSERT INTO auth_users (username, password) VALUES ($1, $2) RETURNING username",
     [username, hashedPassword]
   );
 
@@ -17,14 +17,14 @@ export async function addOne(username, password) {
 }
 
 export async function getAll() {
-  const result = await pool.query("SELECT username FROM users");
+  const result = await pool.query("SELECT username FROM auth_users");
   return result.rows;
 }
 
 
 export async function authenticateUser(username, password) {
   const result = await pool.query(
-    "SELECT username, password FROM users WHERE username = $1",
+    "SELECT username, password FROM auth_users WHERE username = $1",
     [username]
   );
 
@@ -47,7 +47,7 @@ export async function authenticateUser(username, password) {
 
 export async function saveRefreshToken(username, refreshToken) {
   const result = await pool.query(
-    "UPDATE users SET refresh_token = $1 WHERE username = $2 RETURNING username",
+    "UPDATE auth_users SET refresh_token = $1 WHERE username = $2 RETURNING username",
     [refreshToken, username]
   );
 
@@ -57,7 +57,7 @@ export async function saveRefreshToken(username, refreshToken) {
 
 export async function getUserByRefreshToken(refreshToken) {
   const result = await pool.query(
-    "SELECT username FROM users WHERE refresh_token = $1",
+    "SELECT username FROM auth_users WHERE refresh_token = $1",
     [refreshToken]
   );
 
@@ -67,7 +67,7 @@ export async function getUserByRefreshToken(refreshToken) {
 
 export async function clearRefreshToken(username) {
   const result = await pool.query(
-    "UPDATE users SET refresh_token = NULL WHERE username = $1 RETURNING username",
+    "UPDATE auth_users SET refresh_token = NULL WHERE username = $1 RETURNING username",
     [username]
   );
 
@@ -76,7 +76,7 @@ export async function clearRefreshToken(username) {
 
 export async function deleteUser(username) {
   const result = await pool.query(
-    "DELETE FROM users WHERE username = $1 RETURNING username",
+    "DELETE FROM auth_users WHERE username = $1 RETURNING username",
     [username]
   );
 
