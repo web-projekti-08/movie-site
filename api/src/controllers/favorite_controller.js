@@ -38,13 +38,36 @@ export async function getUserFavorites(req, res, next) {
 
 export async function removeUserFavorite(req, res, next) {
   try {
-    console.log("favoriteID: " + req.params.favoriteId);
-    console.log("userID: " + req.params.userId);
     const favorite = await FavoriteModel.removeUserFavorite(req.params.userId, req.params.favoriteId);
     if (!favorite) {
       res.status(404).json({ error: "Favorite not found" });
     }
     res.status(200).json(favorite);
+  } catch (err) {
+    next(err);
+  }
+}
+
+// SHARE
+export async function createShareId(req, res, next) {
+  try {
+    const shareId = await FavoriteModel.createShareId(req.body.userId);
+    if (!shareId || shareId.length === 0) {
+      return res.status(404).json({ error: "Could not create share "});
+    }
+    res.status(200).json({
+      shareId,
+      shareUrl: `${process.env.FRONTEND_URL}/favorites/share/${shareId}`
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function getSharedFavorites(req, res, next) {
+  try {
+    const shared = await FavoriteModel.getSharedFavorites(req.params.shareId);
+    res.status(200).json(shared || []);
   } catch (err) {
     next(err);
   }

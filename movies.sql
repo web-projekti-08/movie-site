@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS group_chat CASCADE;
 
 CREATE TABLE users (
   user_id SERIAL PRIMARY KEY,
+  share_id TEXT UNIQUE,
   email VARCHAR(255) UNIQUE NOT NULL,
   password VARCHAR(255) NOT NULL
 );

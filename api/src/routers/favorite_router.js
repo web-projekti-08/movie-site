@@ -3,6 +3,10 @@ import * as FavoriteController from "../controllers/favorite_controller.js"
 
 const favoriteRouter = Router();
 
+// Share
+favoriteRouter.post("/share/create", FavoriteController.createShareId);
+favoriteRouter.get("/share/:shareId", FavoriteController.getSharedFavorites); // NO AUTH
+
 // Create
 favoriteRouter.post("/:userId", FavoriteController.addFavorite);
 
