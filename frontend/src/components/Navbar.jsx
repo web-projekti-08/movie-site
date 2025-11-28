@@ -5,7 +5,7 @@ import '../App.css'
 
 export default function Navbar() {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav className="navbar navbar-expand-lg navbar-dark custom-navbar">
   <div className="container-fluid">
     <NavLink className="navbar-brand" to="/">Movie-Site</NavLink>
     <button

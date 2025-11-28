@@ -10,6 +10,7 @@ import Favorites from "./pages/Favorites";
 import Settings from "./pages/Settings";
 import Signup from "./pages/Signup";
 import Notifications from "./pages/Notifications";
+import GroupDetails from "./components/GroupDetails";
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/groups" element={<Groups />} />
+          <Route path="/groups/:groupId" element={<GroupDetails />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/signup" element={<Signup />} />

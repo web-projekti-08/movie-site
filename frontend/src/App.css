@@ -27,14 +27,14 @@
   border-radius: 4px;
 }
 
-.btn {
+/*.btn {
   padding: 0.5rem 1.5rem;
   font-size: 1rem;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-}
+}*/
 
 .btn:disabled {
   opacity: 0.6;
@@ -114,6 +114,8 @@ html, body {
 body {
     position:relative;
     min-height: 100vh;
+    background-color: #292929 !important;
+    color:#ffffff !important
 }
 
 #root {
@@ -125,8 +127,6 @@ main {
     padding-bottom: 4rem;
 }
 
-
-
 footer {
     position: fixed;
     bottom: 0;
@@ -134,8 +134,61 @@ footer {
     width: 100%;
     text-align: center;
     padding: 1rem;
-    color: rgb(3, 3, 3);
+    color: rgb(240, 240, 240);
 }
 
+.small-card {
+  max-width: 250px;
+  width: 100%;
+  margin-right: 0rem;
+}
 
+.small-card .card-img-top {
+  height: 250px;
+  width: 100%;
+  object-fit:contain;
+  object-position: top;
+  background-color: #0c0c0c;
+}
 
+.wide-dropdown {
+  width: auto;
+}
+
+.wide-dropdown li button {
+  padding: 0.1rem 0.2rem;
+  margin-top: 0.4rem;
+}
+
+.custom-navbar {
+  background-color: rgb(29, 29, 29);
+  font-family:Verdana, Geneva, Tahoma, sans-serif
+}
+
+.navbar-brand {
+  text-transform: uppercase;
+  font-family: fantasy;
+  color: #dca10c !important;
+}
+
+.banner {
+  width: 100%;
+  position: relative;
+  height: 120px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.banner-img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.join-groups-wrapper {
+  display: flex;
+  gap: 1rem;
+  overflow-x: hidden;
+}
