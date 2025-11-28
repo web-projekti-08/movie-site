@@ -25,7 +25,7 @@ export async function getReviewByMediaId(mediaId) {
     WHERE media_id = $1`,
     [mediaId]
   );
-  return result.rows[0];
+  return result.rows;
 }
 
 export async function getReviewsByUserId(userId) {

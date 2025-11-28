@@ -1,17 +1,14 @@
 import { isOwner, isMember } from "../models/group_model.js";
 
+// TESTING BEFORE AUTH REMOVE THIS AND REPLACE
+const TEST_USER_ID = 1; // req.user.userId
+
 export async function requireOwner(req, res, next) {
   const groupId = req.params.groupId;
-
-  // userId from JWT
-  //const userId = req.user.userId;
-  const userId = 1;
-  console.log("userId: " + userId);
-  console.log("groupId: " + groupId);
+  const userId = TEST_USER_ID;
 
   try {
     const owner = await isOwner(groupId, userId);
-    console.log(owner);
     if (!owner || owner.length === 0) {
       return res.status(403).json({ error: "Insufficient permission: Owner"});
     }
@@ -24,19 +21,14 @@ export async function requireOwner(req, res, next) {
   
 export async function requireMember(req, res, next) {
   const groupId = req.params.groupId;
-
-  // userId from JWT
-  //const userId = req.user.userId;
-  const userId = 3;
+  const userId = TEST_USER_ID;
 
   try {
     // Owner is always a member
     const owner = await isOwner(groupId, userId);
     if (owner && owner.length > 0) return next();
-    console.log(owner);
 
     const member = await isMember(groupId, userId);
-    console.log(member);
     if (!member || member.length === 0) {
       return res.status(403).json({ error: "Insufficient permission: Member"});
     }
@@ -50,13 +42,7 @@ export async function requireMember(req, res, next) {
 export async function requireSelfOrOwner(req, res, next) {
   const groupId = req.params.groupId;
   const targetUserId = parseInt(req.params.userId);
-
-  // userId from JWT
-  //const currentUserId = req.user.userId;
-  const currentUserId = 1;
-
-  console.log("userId: " + currentUserId);
-  console.log("groupId: " + groupId);
+  const currentUserId = TEST_USER_ID;
 
   try {
     if (currentUserId === targetUserId) return next();

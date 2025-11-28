@@ -38,6 +38,19 @@ export async function getGroup(req, res, next) {
   }
 }
 
+export async function getUserGroups(req, res, next) {
+  const userId = req.params.userId;
+
+  if (!userId) return res.status(400).json({ error: "User ID required" });
+
+  try {
+    const groups = await GroupModel.getUserGroups(userId);
+    res.status(200).json(groups);
+  } catch (err) {
+    next(err);
+  }
+}
+
 export async function deleteGroup(req, res, next) {
   try {
     const result = await GroupModel.deleteGroup(req.params.groupId);
@@ -117,6 +130,16 @@ export async function rejectJoinRequest(req, res, next) {
   try {
     const result = await GroupModel.rejectJoinRequest(req.params.groupId, req.params.userId);
     res.status(204).json(result);
+  } catch (err) {
+    next(err);
+  }
+}
+
+// ADD CONTENT
+export async function addContent(req, res, next) {
+  try {
+    const result = await GroupModel.addMovieToGroup(req.params.groupId, req.body.mediaId);
+    res.status(201).json(result);
   } catch (err) {
     next(err);
   }

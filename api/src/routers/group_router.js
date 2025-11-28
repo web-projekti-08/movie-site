@@ -1,5 +1,5 @@
 import { Router } from "express";
-import * as GroupController from "../controllers/group_contoller.js";
+import * as GroupController from "../controllers/group_controller.js";
 import * as GroupContentController from "../controllers/group_content_controller.js"
 import * as GroupChatController from "../controllers/group_chat_controller.js"
 import { requireOwner, requireMember, requireSelfOrOwner} from "../middleware/permission_middleware.js"
@@ -16,43 +16,6 @@ const groupRouter = Router();
     );
 */
 
-/*
-  HOW TO USE IN FRONTEND WITH AXIOS.
-  GET, DELETE and PATCH functions use only url parameters, e.g. groupId, userId or postId, examples:
-
-  Delete group chat post:
-  axios.delete(`url + /groups/${groupId}/chat/${postId}`);
-
-  Get all user posts from chat:
-  axios.get(`url + /groups(${groupId}/chat/${userId}`);
-
-  Accept group join request:
-  axios.patch(`url + /groups/${groupId}/requests/${userId}/accept`);
-
-  --------------------
-
-  POST functions use url parameters and JSON body, examples
-
-  Create a new group:
-  axios.post(`url + /groups`, {
-    userId: 1,
-    groupName: "Group name",
-    description: "Cool group"
-  });
-
-  Add content(media) to group:
-  axios.post(`url + /groups/${groupId}/content`, {
-    mediaId: 1
-  });
-
-  Create post in group chat:
-  axios.post(`url + /groups/${groupId}/chat`, {
-    userId: 1,
-    text: "New post something blabla"
-  })
-
-*/
-
 // Add auth middleware(getGroups exception since group list needs to be visible to visitors)
 // GROUP
 groupRouter.post("/", GroupController.createGroup);
@@ -63,6 +26,7 @@ groupRouter.delete("/:groupId", requireOwner, GroupController.deleteGroup);
 // MEMBERS
 groupRouter.get("/:groupId/members", requireMember, GroupController.getGroupMembers);
 groupRouter.delete("/:groupId/members/:userId", requireSelfOrOwner, GroupController.removeMember);
+groupRouter.get("/user/:userId", GroupController.getUserGroups);
 
 // REQUESTS
 groupRouter.post("/:groupId/requests/:userId", GroupController.createJoinRequest);

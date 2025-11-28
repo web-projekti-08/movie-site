@@ -7,7 +7,7 @@ const favoriteRouter = Router();
 favoriteRouter.post("/share/create", FavoriteController.createShareId);
 favoriteRouter.get("/share/:shareId", FavoriteController.getSharedFavorites); // NO AUTH
 
-// Create
+// Add
 favoriteRouter.post("/:userId", FavoriteController.addFavorite);
 
 // Get
