@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { register } from '../services/authApi';
 
-function Signup() {
+function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -42,7 +42,7 @@ function Signup() {
 
   return (
     <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px' }}>
-      <h2>Sign Up</h2>
+      <h2>Register</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleSubmit}>
         <input
@@ -67,11 +67,11 @@ function Signup() {
           style={{ width: '100%', padding: '8px', marginBottom: '10px', boxSizing: 'border-box' }}
         />
         <button type="submit" style={{ width: '100%', padding: '10px', cursor: 'pointer' }}>
-          Sign Up
+          Register
         </button>
       </form>
     </div>
   );
 }
 
-export default Signup;
+export default RegisterPage;

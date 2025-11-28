@@ -21,7 +21,7 @@ app.get("/", (_req, res) => {
   res.send("Postgress API (movie version)");
 });
 
-app.use("/movi", movieRouter);
+app.use("/movie", movieRouter);
 app.use("/groups", groupRouter);
 app.use("/user", userRouter);
 
