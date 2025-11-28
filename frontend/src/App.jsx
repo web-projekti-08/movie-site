@@ -10,6 +10,7 @@ import Favorites from "./pages/Favorites";
 import Settings from "./pages/Settings";
 import Signup from "./pages/Signup";
 import Notifications from "./pages/Notifications";
+import MoviePage from './pages/MoviePage';
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
           <Route path="/settings" element={<Settings />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/notifications" element={<Notifications />} />
+          <Route path="/movie/:id" element={<MoviePage />} />
         </Routes>
       </main>
       <Footer />

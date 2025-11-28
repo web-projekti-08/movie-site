@@ -1,0 +1,176 @@
+/* MoviePage.css */
+
+.movie-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.movie-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 30px;
+  align-items: flex-start;
+}
+
+.movie-details img {
+  border-radius: 8px;
+  max-width: 300px;
+  width: 100%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.movie-details-info {
+  flex: 1;
+  min-width: 250px;
+}
+
+.movie-details-info h2 {
+  margin-top: 0;
+  font-size: 2rem;
+  color: #222;
+}
+
+.movie-details-info p {
+  margin: 8px 0;
+  line-height: 1.5;
+}
+
+.movie-details-info .genres {
+  font-style: italic;
+  color: #666;
+}
+
+.button-row {
+  display: flex;
+  gap: 12px;
+  margin: 15px 0;
+}
+
+button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+.add-favorite-btn {
+  background-color: #ff6b6b;
+  color: white;
+}
+
+.add-favorite-btn:hover {
+  background-color: #ff4c4c;
+}
+
+.add-group-btn {
+  background-color: #4dabf7;
+  color: white;
+}
+
+.add-group-btn:hover {
+  background-color: #1c7ed6;
+}
+
+/* Star rating for reviews */
+.star-rating {
+  display: flex;
+  gap: 5px;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.star {
+  color: #ccc;
+  transition: color 0.2s;
+}
+
+.star.hover,
+.star.selected {
+  color: #ffc107; /* gold */
+}
+
+/* Review form */
+.review-form {
+  margin-top: 20px;
+}
+
+.review-form textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  resize: vertical;
+  margin-bottom: 10px;
+}
+
+.review-form button {
+  background-color: #37b24d;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.review-form button:hover {
+  background-color: #2f9e44;
+}
+
+.review-list {
+  margin-top: 20px;
+}
+
+.review-item {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+}
+
+.review-stars {
+  display: flex;
+  gap: 3px;
+  font-size: 1.2rem;
+}
+
+.review-stars .star {
+  color: #ccc;
+}
+
+.review-stars .star.selected {
+  color: #ffc107; /* gold */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .movie-details {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .movie-details-info {
+    width: 100%;
+  }
+
+  .button-row {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .button-row button {
+    width: 100%;
+  }
+}
