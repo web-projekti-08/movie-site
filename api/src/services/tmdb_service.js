@@ -6,9 +6,10 @@ const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 async function callTMDb(endpoint) {
   try {
     const response = await axios.get(`${TMDB_BASE_URL}${endpoint}`, {
-      params: {
-        api_key: TMDB_API_KEY,
-      },
+      headers: {
+        Authorization: `Bearer ${TMDB_API_KEY}`,
+        accept: 'application/json'
+      }     
     });
     return response.data;
   } catch (err) {
