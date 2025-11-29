@@ -7,13 +7,13 @@ DROP TABLE IF EXISTS member_role CASCADE;
 DROP TABLE IF EXISTS group_content CASCADE;
 DROP TABLE IF EXISTS group_chat CASCADE;
 
-
 CREATE TABLE IF NOT EXISTS users (
-  username VARCHAR(50) PRIMARY KEY,
-  password VARCHAR(60) NOT NULL,
+  user_id SERIAL PRIMARY KEY,
+  share_id TEXT UNIQUE,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL,
   refresh_token TEXT
 );
-
 CREATE TABLE groups (
   group_id SERIAL PRIMARY KEY,
   group_name VARCHAR(50) NOT NULL,
@@ -53,6 +53,13 @@ CREATE TABLE review (
   review_text TEXT,
   rating INT,
   posted_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE favorite (
+  favorite_id SERIAL PRIMARY KEY,
+  user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+  media_id INT NOT NULL,
+  added_at TIMESTAMP DEFAULT NOW()
 );
 
 -- TEST DATA

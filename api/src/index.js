@@ -5,6 +5,11 @@ import "dotenv/config.js";
 import movieRouter from "./routers/movie_router.js";
 import groupRouter from "./routers/group_router.js";
 import userRouter from "./routers/auth_router.js";
+import reviewRouter from "./routers/review_router.js";
+import favoriteRouter from "./routers/favorite_router.js";
+
+
+
 
 const app = express();
 const port = process.env.PORT;
@@ -24,6 +29,9 @@ app.get("/", (_req, res) => {
 app.use("/movie", movieRouter);
 app.use("/groups", groupRouter);
 app.use("/user", userRouter);
+app.use("/review", reviewRouter);
+app.use("/favorite", favoriteRouter);
+
 
 app.listen(port, () => {
   console.log(`server is listening port ${port}`);
