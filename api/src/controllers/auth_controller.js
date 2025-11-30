@@ -1,4 +1,3 @@
-
 import {
   getAll,
   addOne,
@@ -24,51 +23,33 @@ export async function getUsers(req, res, next) {
   }
 }
 
-
-
 export async function addUser(req, res, next) {
   try {
     const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res.status(400).json({ error: "email and password are required" });
-    }
+    if (!email || !password) return res.status(400).json({ error: "Email and password required" });
 
     const user = await addOne(email, password);
+
     res.status(201).json({
       message: "User created successfully",
-      user: {
-        id: user.user_id,
-        email: user.email
-      }
+      user: { userId: user.userId, email: user.email }
     });
   } catch (err) {
-    if (err.code === "23505") {
-      return res.status(409).json({ error: "email already exists" });
-    }
-
+    if (err.code === "23505") return res.status(409).json({ error: "Email already exists" });
     next(err);
   }
 }
 
-
 export async function login(req, res, next) {
   try {
     const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res.status(400).json({ error: "email and Password are required" });
-    }
+    if (!email || !password) return res.status(400).json({ error: "Email and password required" });
 
     const user = await authenticateUser(email, password);
+    if (!user) return res.status(401).json({ error: "Invalid email or password" });
 
-    if (!user) {
-      return res.status(401).json({ error: "invalid email or password" });
-    }
-
-
-    const accessToken = generateAccessToken(user.id, user.email);
-    const refreshToken = generateRefreshToken(user.id, user.email);
+    const accessToken = generateAccessToken(user.userId, user.email);
+    const refreshToken = generateRefreshToken(user.userId, user.email);
 
     await saveRefreshToken(user.email, refreshToken);
 
@@ -76,90 +57,64 @@ export async function login(req, res, next) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000
     });
-
 
     res.json({
       message: "Login successful",
       accessToken,
-      user: {
-        id: user.id,
-        email: user.email
-      }
+      user: { userId: user.userId, email: user.email }
     });
   } catch (err) {
     next(err);
   }
 }
 
-
 export async function refreshAccessToken(req, res, next) {
   try {
     const refreshToken = req.cookies.refreshToken;
-
-    if (!refreshToken) {
-      return res.status(401).json({ error: "Refresh token required" });
-    }
+    if (!refreshToken) return res.status(401).json({ error: "Refresh token required" });
 
     const decoded = verifyRefreshToken(refreshToken);
-
-    if (!decoded) {
-      return res.status(403).json({ error: "Invalid or expired refresh token" });
-    }
+    if (!decoded) return res.status(403).json({ error: "Invalid or expired refresh token" });
 
     const user = await getUserByRefreshToken(refreshToken);
+    if (!user) return res.status(403).json({ error: "Invalid refresh token" });
 
-    if (!user) {
-      return res.status(403).json({ error: "Invalid refresh token" });
-    }
-
-    const accessToken = generateAccessToken(user.email);
-
+    const accessToken = generateAccessToken(user.userId, user.email);
     res.json({ accessToken });
   } catch (err) {
     next(err);
   }
 }
 
-
 export async function logout(req, res, next) {
   try {
     const refreshToken = req.cookies.refreshToken;
-
     if (refreshToken) {
       const user = await getUserByRefreshToken(refreshToken);
-
-      if (user) {
-        await clearRefreshToken(user.email);
-      }
+      if (user) await clearRefreshToken(user.email);
     }
-
     res.clearCookie("refreshToken");
-
     res.json({ message: "Logout successful" });
   } catch (err) {
     next(err);
   }
 }
 
-
 export async function deleteAccount(req, res, next) {
   try {
-    const email = req.user.email;
+    const { email, userId } = req.user;
 
     const refreshToken = req.cookies.refreshToken;
     if (refreshToken) {
-      const user = await getUserByRefreshToken(refreshToken);
-      if (user) {
-        await clearRefreshToken(user.email);
-      }
+      await clearRefreshToken(email);
     }
 
-    await deleteUser(email);
-
+    const deleted = await deleteUser(email);
+    if (!deleted) return res.status(404).json({ error: "User not found" });
+    
     res.clearCookie("refreshToken");
-
     res.json({ message: "Account deleted successfully" });
   } catch (err) {
     next(err);

@@ -4,7 +4,7 @@ export async function createPost(req, res, next) {
   try {
     const { text } = req.body;
     // fix to req.user.userId after auth
-    const post = await ChatModel.createPost(req.params.groupId, 1, text);
+    const post = await ChatModel.createPost(req.params.groupId, req.user.userId, text);
     if (!post) {
       res.status(500).json({ error: "Failed to create post" });
     }
@@ -28,7 +28,7 @@ export async function getPosts(req, res, next) {
 
 export async function getUserPosts(req, res, next) {
   try {
-    const post = await ChatModel.getUserPosts(req.params.groupId, req.params.userId);
+    const post = await ChatModel.getUserPosts(req.params.groupId, req.user.userId);
     if (!post) {
       res.status(500).json({ error: "Failed to get user posts" });
     }
@@ -49,7 +49,7 @@ export async function deletePost(req, res, next) {
 
 export async function deleteUserPosts(req, res, next) {
   try {
-    const post = await ChatModel.deleteUserPosts(req.params.groupId, req.params.userId);
+    const post = await ChatModel.deleteUserPosts(req.params.groupId, req.user.userId);
     res.status(204).json(post);
   } catch (err) {
     next(err);

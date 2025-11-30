@@ -8,6 +8,7 @@ import Groups from "./pages/Groups";
 import Favorites from "./pages/Favorites";
 import Settings from "./pages/Settings";
 import Notifications from "./pages/Notifications";
+import MoviePage from './pages/MoviePage';
 import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage";
 import Signup from "./pages/Signup";
@@ -24,6 +25,7 @@ function App() {
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/notifications" element={<Notifications />} />
+          <Route path="/movie/:id" element={<MoviePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/profile" element={<ProfilePage />} />

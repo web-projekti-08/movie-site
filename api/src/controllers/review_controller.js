@@ -2,8 +2,8 @@ import * as ReviewModel from "../models/review_model.js"
 
 export async function createReview(req, res, next) {
   try {
-    const { mediaId, userId, text, rating } = req.body;
-    const review = await ReviewModel.createReview(mediaId, userId, text, rating);
+    const { mediaId, text, rating } = req.body;
+    const review = await ReviewModel.createReview(mediaId, req.user.userId, text, rating);
     if (!review) {
       res.status(500).json({ error: "Failed to create review" });
     }
@@ -16,8 +16,8 @@ export async function createReview(req, res, next) {
 export async function getReview(req, res, next) {
   try {
     const review = await ReviewModel.getReview(req.params.reviewId);
-    if (!review) {
-      res.status(500).json({ error: "Failed to get review" });
+    if (!review || review.length === 0) {
+      return res.status(200).json([]);
     }
     res.status(200).json(review);
   } catch (err) {
@@ -28,8 +28,8 @@ export async function getReview(req, res, next) {
 export async function getReviewByMediaId(req, res, next) {
   try {
     const review = await ReviewModel.getReviewByMediaId(req.params.mediaId);
-    if (!review) {
-      res.status(500).json({ error: "Failed to get review" });
+    if (!review || review.length === 0) {
+      return res.status(200).json([]);
     }
     res.status(200).json(review);
   } catch (err) {
@@ -39,9 +39,9 @@ export async function getReviewByMediaId(req, res, next) {
 
 export async function getReviewsByUserId(req, res, next) {
   try {
-    const review = await ReviewModel.getReviewsByUserId(req.params.userId);
-    if (!review) {
-      res.status(500).json({ error: "Failed to get user reviews" });
+    const review = await ReviewModel.getReviewsByUserId(req.user.userId);
+    if (!review || review.length === 0) {
+      return res.status(200).json([]);
     }
     res.status(200).json(review);
   } catch (err) {
@@ -52,8 +52,8 @@ export async function getReviewsByUserId(req, res, next) {
 export async function getAllReviews(req, res, next) {
   try {
     const review = await ReviewModel.getAllReviews();
-    if (!review) {
-      res.status(500).json({ error: "Failed to get reviews" });
+    if (!review || review.length === 0) {
+      return res.status(200).json([]);
     }
     res.status(200).json(review);
   } catch (err) {

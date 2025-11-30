@@ -1,7 +1,4 @@
-
-
 import pool from "../database.js";
-
 import bcrypt from "bcryptjs";
 
 const SALT_ROUNDS = 10;
@@ -32,12 +29,11 @@ export async function authenticateUser(email, password) {
     return null;
   }
 
-
   const user = result.rows[0];
   const isValid = await bcrypt.compare(password, user.password);
 
   if (isValid) {
-    return { id: user.user_id, email: user.email };
+    return { userId: user.user_id, email: user.email };
   }
 
   return null;

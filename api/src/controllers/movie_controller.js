@@ -1,18 +1,37 @@
-import { searchTMDbMovies, getNowPlayingMovies, getMovieReviews } from "../services/tmdb_service.js";
+import { 
+  searchTMDbMovies,
+  getNowPlayingMovies,
+  getMovieReviews,
+  getMovieDetails
+} from "../services/tmdb_service.js";
 
-export async function searchTMDb(req, res, next) {
-  const { q } = req.query;
-
-  if (!q || q.trim() === "") {
-    return res.status(400).json({ error: "Search query (q) is required" });
-  }
-
+export async function searchMovies(req, res) {
   try {
-    const results = await searchTMDbMovies(q.trim());
-    res.json(results);
+    const {
+      query,
+      rating,
+      minYear,
+      maxYear,
+      genre
+    } = req.query;
+
+    if (!query || !query.trim()) {
+      return res.status(400).json({ error: "query parameter is required" });
+    }
+
+    const results = await searchTMDbMovies({
+      query,
+      rating: rating ? Number(rating) : null,
+      minYear: minYear ? Number(minYear) : null,
+      maxYear: maxYear ? Number(maxYear) : null,
+      genre: genre ? Number(genre) : null,
+    });
+
+    res.json({ results });
+    
   } catch (err) {
-    res.status(500).json({ error: "Failed to search TMDb" });
-    next(err);
+    console.error("searchMovies error:", err?.message || err);
+    res.status(500).json({ error: "internal server error" });
   }
 }
 
@@ -40,6 +59,20 @@ export async function getReviews(req, res, next) {
     res.json(reviews);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch reviews" });
+    next(err);
+  }
+}
+
+export async function getMovie(req, res, next) {
+  if (!req.params.movieId) {
+    return res.status(400).json({ error: "Movie ID required" });
+  }
+
+  try {
+    const details = await getMovieDetails(req.params.movieId);
+    res.json({ details });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch movie details "});
     next(err);
   }
 }

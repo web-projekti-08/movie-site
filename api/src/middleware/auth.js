@@ -14,6 +14,9 @@ export function authenticateToken(req, res, next) {
     return res.status(403).json({ error: "Invalid or expired access token" });
   }
 
-  req.user = decoded;
+  req.user = {
+    userId: decoded.userId,
+    email: decoded.email
+  };
   next();
 }
