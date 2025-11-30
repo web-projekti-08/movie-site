@@ -19,7 +19,7 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./movies.sql:/docker-entrypoint-initdb.d/movies.sql
+      - ./movies.sql:/docker-entrypoint-initdb.d/01-movies.sql:ro
 
   frontend:
     build: ./frontend

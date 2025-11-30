@@ -7,13 +7,13 @@ DROP TABLE IF EXISTS member_role CASCADE;
 DROP TABLE IF EXISTS group_content CASCADE;
 DROP TABLE IF EXISTS group_chat CASCADE;
 
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
   user_id SERIAL PRIMARY KEY,
   share_id TEXT UNIQUE,
   email VARCHAR(255) UNIQUE NOT NULL,
-  password VARCHAR(255) NOT NULL
+  password VARCHAR(255) NOT NULL,
+  refresh_token TEXT
 );
-
 CREATE TABLE groups (
   group_id SERIAL PRIMARY KEY,
   group_name VARCHAR(50) NOT NULL,
