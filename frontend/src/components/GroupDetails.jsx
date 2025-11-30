@@ -19,14 +19,29 @@ async function handleDeleteGroup() {
 
 useEffect(() => {
   async function loadData() {
+    try {
     const allGroups = await getGroups()
     const found = allGroups.find (g => g.group_id === Number(groupId))
+    if (!found) {
+      setGroup(null)
+      return
+    }
+
     setGroup(found)
 
-    const memberList = await getGroupMembers(Number(groupId))
+    try {
+      const memberList = await getGroupMembers(Number(groupId))
     setMembers(memberList)
+    } catch (err) {
+      console.warn("Failed to load members")
+      setMembers([])
+    }
+  } catch (err) {
+    console.error("Failed to load group", err)
+    setGroup(null)
   }
-
+}
+  
   loadData()
 }, [groupId])
 
@@ -37,7 +52,7 @@ async function handleRemoveMember(userId) {
   
 }
 
-if(!group) return <p>Loading group...</p>
+if(group === null) return <p>Could not load group or it does not exist.</p>
 
 
   return (

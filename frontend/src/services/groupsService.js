@@ -25,8 +25,12 @@ export async function removeMember(groupId, userId) {
 
 // POST (luo uusi ryhmä)
 
-export async function createGroup(data) {
-    const res = await axios.post(API_URL, data)
+export async function createGroup(groupName, description, userId) {
+    const res = await axios.post(`${API_URL}/groups`, {
+        groupName,
+        description,
+        userId
+    })
     return res.data
 }
 

@@ -11,6 +11,7 @@ export default function Groups() {
   const [groups, setGroups] = useState([])
   const [members, setMembers] = useState({})
   const [requests, setRequests] = useState([])
+  const [pendingRequests, setPendingRequests] = useState({})
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [newGroupName, setNewGroupName] = useState("")
   const [newGroupDescription, setNewGroupDescription] = useState("")
@@ -22,6 +23,7 @@ export default function Groups() {
   const createdItemsPerPage = 5
   const visibleCreatedGroups = groups.slice(createdIndex, createdIndex + createdItemsPerPage)
 
+  // skrollaus
   
 function handleNext() {
   if (currentIndex + itemsPerPage < otherGroups.length) {
@@ -54,7 +56,7 @@ function handleCreatedPrev() {
 
     try {
       const userId = 1
-      await createGroup({ userId, groupName: newGroupName, description: newGroupDescription });
+      await createGroup({userId, groupName: newGroupName, description: newGroupDescription});
       setNewGroupName("");
       setNewGroupDescription("");
       setShowCreateForm(false);
@@ -97,6 +99,8 @@ function handleCreatedPrev() {
 
     setMembers(memberData)
 
+    await loadRequests(data)
+
   }
 
   // liittymispyynnöt 
@@ -107,7 +111,7 @@ function handleCreatedPrev() {
       try {
         const reqs = await getRequests(g.group_id)
         reqs.forEach(r => allRequests.push({ ...r, groupName: g.group_name, groupId: g.group_id }))
-      } catch { }
+      } catch (e) {}
     }
     setRequests(allRequests)
   }
@@ -150,18 +154,17 @@ function handleCreatedPrev() {
     fetchGroups()
   }, [])
 
-  
-/* VÄLIAIKAISESTI 
-
-useEffect(() => {
+  useEffect(() => {
     if (groups.length > 0) {
       loadRequests()
-      loadOtherGroups() 
     }
-  }, [groups]) */ 
+  }, [groups])
+
+  
+
 
 // Mock-data front-end testaukseen
-
+/*
 useEffect(() => {
   setRequests([
     { user_id: 2, groupId: 1, groupName: "Movie Maniacs" },
@@ -190,9 +193,8 @@ useEffect(() => {
       { group_id: 109, group_name: "Example Group 9", description: "Example description 9" },
     ])
   }
-}, [otherGroups])
-
-
+}, [otherGroups]) */
+ 
   return (
   <>
     <h4 className="mt-4">Join group</h4>
@@ -274,18 +276,18 @@ useEffect(() => {
       type="button"
       className="btn btn-primary btn-sm mt-4"
       onClick={() => setShowCreateForm(true)}
-    >
-      Create new group
-    </button>
+    >Create new group</button>
 
     {showCreateForm && (
-      <div className="mt-2 card p-5">
+      <form className="mt-2 card p-5" onSubmit={handleCreateGroupForm}>
         <button
           type="button"
           className="btn-close position-absolute top-0 end-0 m-2"
           aria-label="Close"
           onClick={() => setShowCreateForm(false)}
-        ></button>
+        >
+        </button>
+
         <input
           type="text"
           className="form-control mb-2"
@@ -299,10 +301,10 @@ useEffect(() => {
           value={newGroupDescription}
           onChange={e => setNewGroupDescription(e.target.value)}
         />
-        <button className="btn btn-success btn-sm" onClick={handleCreateGroupForm}>
+        <button type="submit" className="btn btn-success btn-sm"> 
           Create
         </button>
-      </div>
+      </form>
     )}
 
       <h4 className="mt-4">Pending requests</h4>
