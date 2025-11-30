@@ -1,12 +1,21 @@
 import React, {useEffect, useState} from 'react'
-import {useParams, Link} from 'react-router-dom'
-import { getGroups, getGroupMembers, removeMember } from '../services/groupsService'
+import {useParams, Link, useNavigate} from 'react-router-dom'
+import { getGroups, getGroupMembers, removeMember, deleteGroup } from '../services/groupsService'
 
 export default function GroupDetails() {
 
 const {groupId} = useParams()
 const [group, setGroup] = useState(null)
 const [members, setMembers] = useState([])
+const navigate = useNavigate()
+
+async function handleDeleteGroup() {
+  const confirmed = window.confirm("Confirm deletion")
+  if (!confirmed) return
+
+  await deleteGroup(Number(groupId))
+  navigate("/groups")
+}
 
 useEffect(() => {
   async function loadData() {
@@ -22,7 +31,7 @@ useEffect(() => {
 }, [groupId])
 
 async function handleRemoveMember(userId) {
-  await removeMember(Numbre(groupId), userId)
+  await removeMember(Number(groupId), userId)
   const updated = await getGroupMembers(Number(groupId))
   setMembers(updated)
   
@@ -37,6 +46,10 @@ if(!group) return <p>Loading group...</p>
       <Link to="/groups" className="btn btn-secondary btn-sm mb-3">Back</Link>
 
       <h2>{group.group_name}</h2>
+      <button 
+          className="btn btn-danger btn-sm mt-2 mb-3"
+          onClick={handleDeleteGroup}
+          >Delete group</button>
       <p>{group.description}</p>
 
       <h4 className="mt-4">Members</h4>

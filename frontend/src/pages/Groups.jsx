@@ -179,15 +179,15 @@ useEffect(() => {
   useEffect(() => {
   if (otherGroups.length === 0) {
     setOtherGroups([
-      { group_id: 101, group_name: "Test Group 1", description: "Example description" },
-      { group_id: 102, group_name: "Test Group 2", description: "Example description 2" },
-      { group_id: 103, group_name: "Test Group 3", description: "Example description 3" },
-      { group_id: 104, group_name: "Test Group 4", description: "Example description 4" },
-      { group_id: 105, group_name: "Test Group 5", description: "Example description 5" },
-      { group_id: 106, group_name: "Test Group 6", description: "Example description 6" },
-      { group_id: 107, group_name: "Test Group 7", description: "Example description 7" },
-      { group_id: 108, group_name: "Test Group 8", description: "Example description 8" },
-      { group_id: 109, group_name: "Test Group 9", description: "Example description 9" },
+      { group_id: 101, group_name: "Example Group 1", description: "Example description" },
+      { group_id: 102, group_name: "Example Group 2", description: "Example description 2" },
+      { group_id: 103, group_name: "Example Group 3", description: "Example description 3" },
+      { group_id: 104, group_name: "Example Group 4", description: "Example description 4" },
+      { group_id: 105, group_name: "Example Group 5", description: "Example description 5" },
+      { group_id: 106, group_name: "Example Group 6", description: "Example description 6" },
+      { group_id: 107, group_name: "Example Group 7", description: "Example description 7" },
+      { group_id: 108, group_name: "Example Group 8", description: "Example description 8" },
+      { group_id: 109, group_name: "Example Group 9", description: "Example description 9" },
     ])
   }
 }, [otherGroups])
@@ -247,39 +247,6 @@ useEffect(() => {
             <p className="card-text">{group.description}</p>
 
             <div className="d-flex justify-content-between mt-auto">
-              <div className="dropdown">
-                <button
-                  className="btn btn-warning dropdown-toggle"
-                  type="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Members
-                </button>
-                <ul className="dropdown-menu wide-dropdown">
-                  {(members[group.group_id] || []).map(m => (
-                    <li
-                      className="d-flex justify-content-between align-items-center"
-                      key={m.user_id}
-                    >
-                      <span>{m.user_id}</span>
-                      <button
-                        className="btn btn-danger btn-sm"
-                        onClick={() => handleRemoveMember(group.group_id, m.user_id)}
-                      >
-                        Remove
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <button
-                className="btn btn-outline-danger btn-sm"
-                onClick={() => handleDeleteGroup(group.group_id)}
-              >
-                Delete
-              </button>
             </div>
           </div>
         </div>
