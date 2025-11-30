@@ -1,40 +1,28 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { register } from '../services/authApi';
+import { login } from '../services/authApi';
 
-function Signup() {
+function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-
-  const validatePassword = (pwd) => {
-    return pwd.length >= 8 && /\d/.test(pwd) && /[A-Z]/.test(pwd);
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
-    if (!email || !password || !confirmPassword) {
-      setError('All fields are required');
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError('Passwords do not match');
-      return;
-    }
-
-    if (!validatePassword(password)) {
-      setError('Password must be at least 8 characters, contain a number and an uppercase letter');
+    if (!email || !password) {
+      setError('Email and password are required');
       return;
     }
 
     try {
-      await register(email, password);
-      navigate('/login');
+      const response = await login(email, password);
+      localStorage.setItem('accessToken', response.accessToken);
+      localStorage.setItem('userId', response.user.userId);
+      localStorage.setItem('userEmail', response.user.email);
+      navigate('/profile');
     } catch (err) {
       setError(err.message);
     }
@@ -42,7 +30,7 @@ function Signup() {
 
   return (
     <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px' }}>
-      <h2>Sign Up</h2>
+      <h2>Login</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleSubmit}>
         <input
@@ -59,19 +47,12 @@ function Signup() {
           onChange={(e) => setPassword(e.target.value)}
           style={{ width: '100%', padding: '8px', marginBottom: '10px', boxSizing: 'border-box' }}
         />
-        <input
-          type="password"
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          style={{ width: '100%', padding: '8px', marginBottom: '10px', boxSizing: 'border-box' }}
-        />
         <button type="submit" style={{ width: '100%', padding: '10px', cursor: 'pointer' }}>
-          Sign Up
+          Login
         </button>
       </form>
     </div>
   );
 }
 
-export default Signup;
+export default LoginPage;

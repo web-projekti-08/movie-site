@@ -36,7 +36,7 @@ export default function MoviePage() {
 
   async function handleReviewSubmit(text, rating) {
     try {
-      await postReview(id, userId, text, rating);
+      await postReview(id, text, rating);
       const updatedReviews = await fetchMovieReviews(id);
       setReviews(updatedReviews || []);
     } catch (err) {

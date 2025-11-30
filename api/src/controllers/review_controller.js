@@ -2,8 +2,8 @@ import * as ReviewModel from "../models/review_model.js"
 
 export async function createReview(req, res, next) {
   try {
-    const { mediaId, userId, text, rating } = req.body;
-    const review = await ReviewModel.createReview(mediaId, userId, text, rating);
+    const { mediaId, text, rating } = req.body;
+    const review = await ReviewModel.createReview(mediaId, req.user.userId, text, rating);
     if (!review) {
       res.status(500).json({ error: "Failed to create review" });
     }
@@ -39,7 +39,7 @@ export async function getReviewByMediaId(req, res, next) {
 
 export async function getReviewsByUserId(req, res, next) {
   try {
-    const review = await ReviewModel.getReviewsByUserId(req.params.userId);
+    const review = await ReviewModel.getReviewsByUserId(req.user.userId);
     if (!review || review.length === 0) {
       return res.status(200).json([]);
     }

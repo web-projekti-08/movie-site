@@ -3,8 +3,8 @@ import * as GroupModel from "../models/group_model.js";
 // GROUP
 export async function createGroup(req, res, next) {
   try {
-    const { userId, groupName, description } = req.body;
-    const group = await GroupModel.createGroup(userId, groupName, description);
+    const { groupName, description } = req.body;
+    const group = await GroupModel.createGroup(req.user.userId, groupName, description);
     if (!group) {
       res.status(500).json({ error: "Failed to create group" });
     }
@@ -39,7 +39,7 @@ export async function getGroup(req, res, next) {
 }
 
 export async function getUserGroups(req, res, next) {
-  const userId = req.params.userId;
+  const userId = req.user.userId;
 
   if (!userId) return res.status(400).json({ error: "User ID required" });
 
@@ -101,7 +101,7 @@ export async function removeMember(req, res, next) {
 // REQUESTS
 export async function createJoinRequest(req, res, next) {
   try {
-    const request = await GroupModel.createJoinRequest(req.params.groupId, req.params.userId);
+    const request = await GroupModel.createJoinRequest(req.params.groupId, req.user.userId);
     res.status(201).json(request);
   } catch (err) {
     next(err);

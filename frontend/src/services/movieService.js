@@ -1,6 +1,11 @@
 import axios from "axios";
 const API = process.env.REACT_APP_API_URL;
 
+const getAuthHeader = () => {
+  const token = localStorage.getItem("accessToken");
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
 export async function fetchMovieDetails(id) {
   const res = await axios.get(`${API}/movie/${id}`);
   return res.data.details;
@@ -17,19 +22,30 @@ export async function fetchMovieReviews(id) {
   }
 }
 
-export async function postReview(mediaId, userId, reviewText, rating) {
-  return axios.post(`${API}/review`, { mediaId, userId, text: reviewText, rating });
+export async function postReview(mediaId, reviewText, rating) {
+  return axios.post(`${API}/review`,
+    { mediaId, text: reviewText, rating },
+    { headers: getAuthHeader() }
+  );
 }
 
-export async function addFavorite(userId, mediaId) {
-  return axios.post(`${API}/favorite/${userId}`, { mediaId });
+export async function addFavorite(mediaId) {
+  return axios.post(`${API}/favorite/`,
+    { mediaId },
+    { headers: getAuthHeader() }
+  );
 }
 
 export async function addMovieToGroup(groupId, mediaId) {
-  return axios.post(`${API}/groups/${groupId}/content`, { mediaId });
+  return axios.post(`${API}/groups/${groupId}/content`,
+    { mediaId },
+    { headers: getAuthHeader() }
+  );
 }
 
-export async function fetchUserGroups(userId) {
-  const res = await axios.get(`${API}/groups/user/${userId}`);
+export async function fetchUserGroups() {
+  const res = await axios.get(`${API}/groups/user`,
+    { headers: getAuthHeader() }
+  );
   return res.data;
 }

@@ -1,22 +1,27 @@
 import { Router } from "express";
 import * as ReviewController from "../controllers/review_controller.js"
+import { authenticateToken } from "../middleware/auth.js"
 
 const reviewRouter = Router();
 
-// Create
-reviewRouter.post("/", ReviewController.createReview);
+// CREATE
+reviewRouter.post("/", authenticateToken, ReviewController.createReview);
 
-// Get
-reviewRouter.get("/", ReviewController.getAllReviews);
+// GET
 reviewRouter.get("/media/:mediaId", ReviewController.getReviewByMediaId);
-reviewRouter.get("/user/:userId", ReviewController.getReviewsByUserId);
-reviewRouter.get("/:reviewId", ReviewController.getReview);
+reviewRouter.get("/", authenticateToken, ReviewController.getAllReviews);
 
-// Edit
-reviewRouter.patch("/:reviewId", ReviewController.editReview);
+// USER REVIEWS
+reviewRouter.get("/user", authenticateToken, ReviewController.getReviewsByUserId);
 
-// Delete
-reviewRouter.delete("/user/:userId", ReviewController.deleteUserReviews);
-reviewRouter.delete("/:reviewId", ReviewController.deleteReview);
+// SINGLE REVIEW
+reviewRouter.get("/:reviewId", authenticateToken, ReviewController.getReview);
+
+// EDIT
+reviewRouter.patch("/:reviewId", authenticateToken, ReviewController.editReview);
+
+// DELETE
+reviewRouter.delete("/:reviewId", authenticateToken, ReviewController.deleteReview);
+reviewRouter.delete("/user", authenticateToken, ReviewController.deleteUserReviews);
 
 export default reviewRouter;

@@ -1,20 +1,20 @@
 import { Router } from "express";
-import * as FavoriteController from "../controllers/favorite_controller.js"
+import * as FavoriteController from "../controllers/favorite_controller.js";
+import { authenticateToken } from "../middleware/auth.js";
 
 const favoriteRouter = Router();
 
-// Share
-favoriteRouter.post("/share/create", FavoriteController.createShareId);
+// ADD FAVORITE
+favoriteRouter.post("/", authenticateToken, FavoriteController.addFavorite);
+
+// GET FAVORITES
+favoriteRouter.get("/", authenticateToken, FavoriteController.getUserFavorites);
+
+// SHARE
+favoriteRouter.post("/share/create", authenticateToken, FavoriteController.createShareId);
 favoriteRouter.get("/share/:shareId", FavoriteController.getSharedFavorites); // NO AUTH
 
-// Add
-favoriteRouter.post("/:userId", FavoriteController.addFavorite);
-
-// Get
-favoriteRouter.get("/:userId/:favoriteId", FavoriteController.getUserFavorite);
-favoriteRouter.get("/:userId", FavoriteController.getUserFavorites);
-
-// Delete
-favoriteRouter.delete("/:userId/:favoriteId", FavoriteController.removeUserFavorite);
+// DELETE
+favoriteRouter.delete("/:favoriteId", authenticateToken, FavoriteController.removeUserFavorite);
 
 export default favoriteRouter;
