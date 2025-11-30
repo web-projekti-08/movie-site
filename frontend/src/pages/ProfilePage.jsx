@@ -22,6 +22,7 @@ function ProfilePage() {
       const token = localStorage.getItem('accessToken');
       await logout(token);
       localStorage.removeItem('accessToken');
+      localStorage.removeItem('userEmail');
       localStorage.removeItem('userId');
       navigate('/login');
     } catch (err) {
@@ -35,6 +36,7 @@ function ProfilePage() {
       const token = localStorage.getItem('accessToken');
       await deleteAccount(token);
       localStorage.removeItem('accessToken');
+      localStorage.removeItem('userEmail');
       localStorage.removeItem('userId');
       navigate('/register');
     } catch (err) {

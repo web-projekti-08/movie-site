@@ -28,17 +28,23 @@ export async function getUsers(req, res, next) {
 
 export async function addUser(req, res, next) {
   try {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
-    if (!username || !password) {
-      return res.status(400).json({ error: "Username and password are required" });
+    if (!email || !password) {
+      return res.status(400).json({ error: "email and password are required" });
     }
 
-    const user = await addOne(username, password);
-    res.status(201).json({ message: "User created successfully", username: user.username });
+    const user = await addOne(email, password);
+    res.status(201).json({
+      message: "User created successfully",
+      user: {
+        id: user.user_id,
+        email: user.email
+      }
+    });
   } catch (err) {
     if (err.code === "23505") {
-      return res.status(409).json({ error: "Username already exists" });
+      return res.status(409).json({ error: "email already exists" });
     }
 
     next(err);
@@ -48,23 +54,23 @@ export async function addUser(req, res, next) {
 
 export async function login(req, res, next) {
   try {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
-    if (!username || !password) {
-      return res.status(400).json({ error: "Username and Password are required" });
+    if (!email || !password) {
+      return res.status(400).json({ error: "email and Password are required" });
     }
 
-    const user = await authenticateUser(username, password);
+    const user = await authenticateUser(email, password);
 
     if (!user) {
-      return res.status(401).json({ error: "invalid username or password" });
+      return res.status(401).json({ error: "invalid email or password" });
     }
 
 
-    const accessToken = generateAccessToken(user.username);
-    const refreshToken = generateRefreshToken(user.username);
+    const accessToken = generateAccessToken(user.id, user.email);
+    const refreshToken = generateRefreshToken(user.id, user.email);
 
-    await saveRefreshToken(user.username, refreshToken);
+    await saveRefreshToken(user.email, refreshToken);
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
@@ -76,8 +82,11 @@ export async function login(req, res, next) {
 
     res.json({
       message: "Login successful",
-      username: user.username,
-      accessToken
+      accessToken,
+      user: {
+        id: user.id,
+        email: user.email
+      }
     });
   } catch (err) {
     next(err);
@@ -105,7 +114,7 @@ export async function refreshAccessToken(req, res, next) {
       return res.status(403).json({ error: "Invalid refresh token" });
     }
 
-    const accessToken = generateAccessToken(user.username);
+    const accessToken = generateAccessToken(user.email);
 
     res.json({ accessToken });
   } catch (err) {
@@ -122,7 +131,7 @@ export async function logout(req, res, next) {
       const user = await getUserByRefreshToken(refreshToken);
 
       if (user) {
-        await clearRefreshToken(user.username);
+        await clearRefreshToken(user.email);
       }
     }
 
@@ -137,17 +146,17 @@ export async function logout(req, res, next) {
 
 export async function deleteAccount(req, res, next) {
   try {
-    const username = req.user.username;
+    const email = req.user.email;
 
     const refreshToken = req.cookies.refreshToken;
     if (refreshToken) {
       const user = await getUserByRefreshToken(refreshToken);
       if (user) {
-        await clearRefreshToken(user.username);
+        await clearRefreshToken(user.email);
       }
     }
 
-    await deleteUser(username);
+    await deleteUser(email);
 
     res.clearCookie("refreshToken");
 

@@ -4,7 +4,7 @@ export async function register(email, password) {
   const response = await fetch(`${API_URL}/user/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username: email, password })
+    body: JSON.stringify({ email, password })
   });
   if (!response.ok) {
     const errorData = await response.json();
@@ -18,7 +18,7 @@ export async function login(email, password) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
-    body: JSON.stringify({ username: email, password })
+    body: JSON.stringify({ email, password })
   });
   if (!response.ok) {
     const errorData = await response.json();

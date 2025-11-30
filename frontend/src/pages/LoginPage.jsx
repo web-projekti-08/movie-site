@@ -20,7 +20,8 @@ function LoginPage() {
     try {
       const response = await login(email, password);
       localStorage.setItem('accessToken', response.accessToken);
-      localStorage.setItem('userId', response.username);
+      localStorage.setItem('userId', response.user.id);
+      localStorage.setItem('userEmail', response.user.email);
       navigate('/profile');
     } catch (err) {
       setError(err.message);
