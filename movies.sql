@@ -9,6 +9,7 @@ DROP TABLE IF EXISTS group_chat CASCADE;
 
 CREATE TABLE users (
   user_id SERIAL PRIMARY KEY,
+  share_id TEXT UNIQUE,
   email VARCHAR(255) UNIQUE NOT NULL,
   password VARCHAR(255) NOT NULL
 );
@@ -52,6 +53,13 @@ CREATE TABLE review (
   review_text TEXT,
   rating INT,
   posted_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE favorite (
+  favorite_id SERIAL PRIMARY KEY,
+  user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+  media_id INT NOT NULL,
+  added_at TIMESTAMP DEFAULT NOW()
 );
 
 -- TEST DATA
