@@ -4,24 +4,18 @@ import { authenticateToken } from "../middleware/auth.js"
 
 const reviewRouter = Router();
 
-// CREATE
-reviewRouter.post("/", authenticateToken, ReviewController.createReview);
+// Public
+reviewRouter.get("/", ReviewController.getAllReviews);
 
-// GET
-reviewRouter.get("/media/:mediaId", ReviewController.getReviewByMediaId);
-reviewRouter.get("/", authenticateToken, ReviewController.getAllReviews);
-
-// USER REVIEWS
+// User protected (must come after /user route)
+reviewRouter.post("/:mediaId", authenticateToken, ReviewController.createReview);
 reviewRouter.get("/user", authenticateToken, ReviewController.getReviewsByUserId);
-
-// SINGLE REVIEW
-reviewRouter.get("/:reviewId", authenticateToken, ReviewController.getReview);
-
-// EDIT
+reviewRouter.get("/:reviewId/detail", authenticateToken, ReviewController.getReview);
 reviewRouter.patch("/:reviewId", authenticateToken, ReviewController.editReview);
-
-// DELETE
 reviewRouter.delete("/:reviewId", authenticateToken, ReviewController.deleteReview);
 reviewRouter.delete("/user", authenticateToken, ReviewController.deleteUserReviews);
+
+// Get by media ID (must come last to avoid conflicts)
+reviewRouter.get("/:mediaId", ReviewController.getReviewByMediaId);
 
 export default reviewRouter;
