@@ -2,6 +2,7 @@ import axios from 'axios'
 
 const API_URL = 'http://localhost:3001/groups'
 
+
 // GET (hae kaikki ryhmät)
 
 export async function getGroups() {
@@ -26,7 +27,7 @@ export async function removeMember(groupId, userId) {
 // POST (luo uusi ryhmä)
 
 export async function createGroup(groupName, description, userId) {
-    const res = await axios.post(`${API_URL}/groups`, {
+    const res = await axios.post(`${API_URL}`, {
         groupName,
         description,
         userId

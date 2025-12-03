@@ -190,5 +190,5 @@ footer {
 .join-groups-wrapper {
   display: flex;
   gap: 1rem;
-  overflow-x: hidden;
+  overflow-x: scroll;
 }

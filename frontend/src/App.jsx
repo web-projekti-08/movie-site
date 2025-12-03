@@ -5,13 +5,15 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Groups from "./pages/Groups";
-import Login from "./pages/Login";
 import Favorites from "./pages/Favorites";
 import Settings from "./pages/Settings";
-import Signup from "./pages/Signup";
 import Notifications from "./pages/Notifications";
 import GroupDetails from "./components/GroupDetails";
 
+import MoviePage from './pages/MoviePage';
+import LoginPage from "./pages/LoginPage";
+import ProfilePage from "./pages/ProfilePage";
+import Signup from "./pages/Signup";
 
 function App() {
   return (
@@ -21,13 +23,15 @@ function App() {
       <main className="container mt-4">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
           <Route path="/groups" element={<Groups />} />
           <Route path="/groups/:groupId" element={<GroupDetails />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/settings" element={<Settings />} />
-          <Route path="/signup" element={<Signup />} />
           <Route path="/notifications" element={<Notifications />} />
+          <Route path="/movie/:id" element={<MoviePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </main>
       <Footer />

@@ -38,6 +38,17 @@ export async function getGroup(groupId) {
   return result.rows[0];
 }
 
+export async function getUserGroups(userId) {
+  const result = await pool.query(`
+    SELECT g.group_id, g.group_name, g.description
+    FROM groups g
+    JOIN group_members gm ON g.group_id = gm.group_id
+    WHERE gm.user_id = $1
+  `, [userId]);
+
+  return result.rows;
+}
+
 export async function deleteGroup(groupId) {
   const result = await pool.query(`DELETE FROM groups WHERE group_id = $1`, [groupId]);
   await pool.query('DELETE FROM group_members WHERE group_id = $1', [groupId]);
@@ -113,4 +124,15 @@ export async function rejectJoinRequest(groupId, userId) {
     WHERE group_id = $1 AND user_id = $2
     RETURNING *`, [groupId, userId]);
   return result.rows[0] || null;
+}
+
+// ADD CONTENT
+export async function addMovieToGroup(groupId, mediaId) {
+  const result = await pool.query(`
+    INSERT INTO group_content (group_id, media_id)
+    VALUES ($1, $2)
+    RETURNING *`,
+    [groupId, mediaId]
+  );
+  return result.rows[0];
 }
