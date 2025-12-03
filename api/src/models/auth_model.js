@@ -50,14 +50,27 @@ export async function saveRefreshToken(email, refreshToken) {
   return result.rows[0];
 }
 
-
+// Hae käyttäjä refresh tokenilla
 export async function getUserByRefreshToken(refreshToken) {
   const result = await pool.query(
-    "SELECT email FROM users WHERE refresh_token = $1",
+    "SELECT user_id, email FROM users WHERE refresh_token = $1",
     [refreshToken]
   );
 
   return result.rows.length > 0 ? result.rows[0] : null;
+}
+
+// Hae käyttäjän ryhmät
+export async function getUserGroups(userId) {
+  const result = await pool.query(
+    `SELECT g.group_id, g.group_name, gm.role
+     FROM groups g
+     JOIN group_members gm ON g.group_id = gm.group_id
+     WHERE gm.user_id = $1`,
+    [userId]
+  );
+
+  return result.rows; // [{ group_id, group_name, role }, ...]
 }
 
 
