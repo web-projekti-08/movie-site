@@ -1,4 +1,9 @@
-import './MoviePage.css';
+/*
+  Yksittäisen elokuvan sivu, joka näyttää elokuvan tiedot, arvostelut.
+  Vain kirjautuneet käyttäjät voivat lisätä elokuvan suosikkeihin, ryhmiin ja kirjoittaa arvosteluja.
+*/
+
+import '../App.css';
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
@@ -6,7 +11,6 @@ import {
   fetchMovieReviews,
   postReview,
   addMovieToGroup,
-  fetchUserGroups
 } from "../services/movieService";
 
 import MovieDetails from "../components/MovieDetails";
@@ -14,25 +18,27 @@ import ReviewList from "../components/ReviewList";
 import ReviewForm from "../components/ReviewForm";
 import AddToFavoritesButton from "../components/AddToFavoritesButton";
 import AddToGroupButton from "../components/AddToGroupButton";
+import { useAuth } from "../context/AuthContext";
 
 export default function MoviePage() {
   const { id } = useParams();
+  const { user } = useAuth();
   const [movie, setMovie] = useState(null);
   const [reviews, setReviews] = useState([]);
-  const [userGroups, setUserGroups] = useState([]);
-  const userId = 1; // TEST
 
   useEffect(() => {
     async function loadData() {
       const d = await fetchMovieDetails(id);
       const r = await fetchMovieReviews(id);
-      const groups = await fetchUserGroups(userId);
-      setMovie(d);
+
+      // Unwrapataan movie details jos tarpeen
+      const movieData = d.details || d;
+
+      setMovie(movieData);
       setReviews(r || []);
-      setUserGroups(groups || []);
     }
-    loadData();
-  }, [id]);
+      loadData();
+    }, [id]);
 
   async function handleReviewSubmit(text, rating) {
     try {
@@ -61,22 +67,25 @@ export default function MoviePage() {
       <div className="movie-details">
         <div className="movie-details-info">
           <MovieDetails movie={movie} />
-          <div className="button-row">
-            <AddToFavoritesButton movieId={movie.id} userId={userId} className="add-favorite-btn" />
-            <AddToGroupButton
-              movieId={movie.id}
-              userGroups={userGroups}
-              onAdd={handleAddToGroup}
-              className="add-group-btn"
-            />
-          </div>
+
+          {user && (
+            <div className="button-row">
+              <AddToFavoritesButton movieId={movie.id} className="add-favorite-btn" />
+              <AddToGroupButton
+                movieId={movie.id}
+                userGroups={user.groups}
+                onAdd={handleAddToGroup}
+                className="add-group-btn"
+              />
+            </div>
+          )}
         </div>
       </div>
 
       <div className="review-section">
         <h3>Reviews</h3>
         <ReviewList reviews={reviews} />
-        <ReviewForm onSubmit={handleReviewSubmit} />
+        {user && <ReviewForm onSubmit={handleReviewSubmit} />}
       </div>
     </div>
   );

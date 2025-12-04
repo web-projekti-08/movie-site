@@ -1,14 +1,22 @@
+/*
+  Rekisteröitymissivu, joka käsittelee käyttäjän rekisteröitymisen.
+  Rekisteröityminen hoidetaan AuthContextin kautta: const { register } = useAuth();.
+*/
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { register } from '../services/authApi';
+import { useAuth } from "../context/AuthContext";
 
 function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState(''); // HIENO SUCCESS MESSAGE
   const navigate = useNavigate();
+  const { register } = useAuth();
 
+  // Valodoi salasana: vähintään 8 merkkiä, yksi numero, yksi iso kirjain
   const validatePassword = (pwd) => {
     return pwd.length >= 8 && /\d/.test(pwd) && /[A-Z]/.test(pwd);
   };
@@ -16,6 +24,7 @@ function RegisterPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
 
     if (!email || !password || !confirmPassword) {
       setError('All fields are required');
@@ -34,7 +43,9 @@ function RegisterPage() {
 
     try {
       await register(email, password);
-      navigate('/login');
+      // NÄYTTÄÄ HIENON VIESTIN JA OHJAA LOGIN-SIVULLE 2 SEKUNNIN JÄLKEEN onnistuneesta rekisteröinnistä
+      setSuccess('Registration successful! Redirecting...');
+      setTimeout(() => navigate('/login'), 2000);
     } catch (err) {
       setError(err.message);
     }
@@ -43,7 +54,10 @@ function RegisterPage() {
   return (
     <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px' }}>
       <h2>Register</h2>
+
       {error && <p style={{ color: 'red' }}>{error}</p>}
+      {success && <p style={{ color: 'green' }}>{success}</p>}
+
       <form onSubmit={handleSubmit}>
         <input
           type="email"

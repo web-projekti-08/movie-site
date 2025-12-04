@@ -1,7 +1,6 @@
 import { Router } from "express";
 import * as GroupController from "../controllers/group_controller.js";
 import * as GroupContentController from "../controllers/group_content_controller.js"
-import * as GroupChatController from "../controllers/group_chat_controller.js"
 import { requireOwner, requireMember, requireSelfOrOwner} from "../middleware/permission_middleware.js"
 import { authenticateToken } from "../middleware/auth.js"
 
@@ -32,12 +31,5 @@ groupRouter.post("/:groupId/content", authenticateToken, requireMember, GroupCon
 groupRouter.get("/:groupId/content/:contentId", authenticateToken, requireMember, GroupContentController.getContentById);
 groupRouter.get("/:groupId/content", authenticateToken, requireMember, GroupContentController.getAllContent);
 groupRouter.delete("/:groupId/content/:contentId", authenticateToken, requireOwner, GroupContentController.removeContent);
-
-// CHAT
-groupRouter.post("/:groupId/chat", authenticateToken, requireMember, GroupChatController.createPost);
-groupRouter.get("/:groupId/chat", authenticateToken, requireMember, GroupChatController.getPosts);
-groupRouter.get("/:groupId/chat/:userId", authenticateToken, requireOwner, GroupChatController.getUserPosts);
-groupRouter.delete("/:groupId/chat/:postId", authenticateToken, requireOwner, GroupChatController.deletePost);
-groupRouter.delete("/:groupId/chat/user/:userId", authenticateToken, requireOwner, GroupChatController.deleteUserPosts);
 
 export default groupRouter;

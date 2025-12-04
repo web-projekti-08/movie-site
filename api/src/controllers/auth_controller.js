@@ -4,6 +4,7 @@ import {
   authenticateUser,
   saveRefreshToken,
   getUserByRefreshToken,
+  getUserGroups,
   clearRefreshToken,
   deleteUser
 } from "../models/auth_model.js";
@@ -18,6 +19,23 @@ export async function getUsers(req, res, next) {
   try {
     const users = await getAll();
     res.json(users);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function getCurrentUser(req, res, next) {
+  try {
+    const { userId, email } = req.user;
+
+    // Get groups
+    const groups = await getUserGroups(userId);
+
+    res.json({
+      userId,
+      email,
+      groups // [{ group_id, group_name, role }]
+    });
   } catch (err) {
     next(err);
   }
@@ -81,8 +99,17 @@ export async function refreshAccessToken(req, res, next) {
     const user = await getUserByRefreshToken(refreshToken);
     if (!user) return res.status(403).json({ error: "Invalid refresh token" });
 
-    const accessToken = generateAccessToken(user.userId, user.email);
-    res.json({ accessToken });
+    const groups = await getUserGroups(user.user_id);
+
+    const accessToken = generateAccessToken(user.user_id, user.email);
+    res.json({
+      accessToken,
+      user: {
+        userId: user.user_id,
+        email: user.email,
+        groups
+      }
+    });
   } catch (err) {
     next(err);
   }
