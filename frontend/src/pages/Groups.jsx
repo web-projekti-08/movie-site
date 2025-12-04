@@ -168,7 +168,6 @@ useEffect(() => {
       if (!res.ok) throw new Error("Failed to fetch now playing movies");
 
       const data = await res.json();
-      // data voi olla suoraan array tai object.results
       const movies = Array.isArray(data) ? data : Array.isArray(data.results) ? data.results : [];
       if (!cancelled) setFeaturedMovies(movies);
 
