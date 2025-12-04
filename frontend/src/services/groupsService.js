@@ -1,63 +1,69 @@
-import axios from 'axios'
+import { authFetch } from './authFetch'
 
-const API_URL = 'http://localhost:3001/groups'
+const API_URL = process.env.REACT_APP_API_URL
 
-
-// GET (hae kaikki ryhmät)
-
+// GET kaikki ryhmät
 export async function getGroups() {
-    const res = await axios.get(API_URL)
-    return res.data
+  const res = await authFetch("/groups");
+  return await res.json();
 }
 
-// GET (hae tietyn ryhmän jäsenet)
+// GET käyttäjän ryhmät
+export async function getUserGroups() {
+  const res = await authFetch("/groups/user");
+  return await res.json();
+}
 
+// GET ryhmän jäsenet
 export async function getGroupMembers(groupId) {
-    const res = await axios.get(`${API_URL}/${groupId}/members`)
-    return res.data
+  const res = await authFetch(`/groups/${groupId}/members`);
+  return await res.json();
 }
 
-// DELETE (poista jäsen)
-
+// DELETE jäsen
 export async function removeMember(groupId, userId) {
-    const res = await axios.delete(`${API_URL}/${groupId}/members/${userId}`)
-    return res.data
+  const res = await authFetch(`/groups/${groupId}/members/${userId}`, {
+    method: "DELETE"
+  });
+  return await res.json();
 }
 
-// POST (luo uusi ryhmä)
-
+// POST uusi ryhmä
 export async function createGroup(groupName, description, userId) {
-    const res = await axios.post(`${API_URL}`, {
-        groupName,
-        description,
-        userId
-    })
-    return res.data
+  const res = await authFetch("/groups", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ groupName, description, userId })
+  });
+  return await res.json();
 }
 
-// DELETE (poista ryhmä)
-
+// DELETE ryhmä
 export async function deleteGroup(groupId) {
-    const res = await axios.delete(`${API_URL}/${groupId}`)
-    return res.data
+  const res = await authFetch(`/groups/${groupId}`, {
+    method: "DELETE"
+  });
+  
 }
 
-// GET (odottavat liittymispyynnöt)
-
+// GET liittymispyynnöt
 export async function getRequests(groupId) {
-    const res = await axios.get(`${API_URL}/${groupId}/requests`)
-    return res.data
+  const res = await authFetch(`/groups/${groupId}/requests`);
+  return await res.json();
 }
 
-// PATCH (hyväksy pyyntö)
-
+// PATCH hyväksy pyyntö
 export async function acceptRequest(groupId, userId) {
-    return axios.patch(`${API_URL}/${groupId}/requests/${userId}/accept`)
+  return authFetch(`/groups/${groupId}/requests/${userId}/accept`, {
+    method: "PATCH"
+  });
 }
 
-// DELETE (hylkää pyyntö)
-
+// DELETE hylkää pyyntö
 export async function rejectRequest(groupId, userId) {
-    return axios.delete(`${API_URL}/${groupId}/requests/${userId}/reject`)
-
+  return authFetch(`/groups/${groupId}/requests/${userId}/reject`, {
+    method: "DELETE"
+  });
 }
+
+

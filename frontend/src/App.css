@@ -233,3 +233,18 @@ footer {
   text-align: center;
   padding: var(--spacing-md);
 }
+
+/* =========================
+   JOIN GROUP KORTIT
+========================= */
+.join-groups-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem; /* väli korttien väliin */
+}
+
+.join-groups-wrapper .card {
+  flex: 1 1 calc(20% - 1rem); /* viisi korttia riviin */
+  max-width: calc(20% - 1rem);
+}
+
