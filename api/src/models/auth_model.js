@@ -83,12 +83,36 @@ export async function clearRefreshToken(email) {
   return result.rows[0];
 }
 
-export async function deleteUser(email) {
-  const result = await pool.query(
-    "DELETE FROM users WHERE email = $1 RETURNING email",
-    [email]
-  );
+export async function deleteUser(userId) {
+  const client = await pool.connect();
 
-  return result.rows[0];
+  try {
+    await client.query("BEGIN");
+
+    await client.query("DELETE FROM group_members WHERE user_id = $1", [userId]);
+
+    await client.query("DELETE FROM group_chat WHERE user_id = $1", [userId]);
+
+    await client.query("DELETE FROM review WHERE user_id = $1", [userId]);
+
+    await client.query("DELETE FROM favorite WHERE user_id = $1", [userId]);
+
+    await client.query("DELETE FROM groups WHERE owner_id = $1", [userId]);
+
+
+    const result = await client.query(
+      "DELETE FROM users WHERE user_id = $1 RETURNING user_id, email",
+      [userId]
+    );
+
+
+    await client.query("COMMIT");
+    return result.rows[0];
+  } catch (err) {
+    await client.query("ROLLBACK");
+    throw err;
+  } finally {
+    client.release();
+  }
+  
 }
-

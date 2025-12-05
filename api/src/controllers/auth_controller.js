@@ -133,18 +133,24 @@ export async function deleteAccount(req, res, next) {
   try {
     const { email, userId } = req.user;
 
+
     const refreshToken = req.cookies.refreshToken;
     if (refreshToken) {
       await clearRefreshToken(email);
+
     }
 
-    const deleted = await deleteUser(email);
-    if (!deleted) return res.status(404).json({ error: "User not found" });
+    const deleted = await deleteUser(userId);
+    if (!deleted) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
     
     res.clearCookie("refreshToken");
     res.json({ message: "Account deleted successfully" });
   } catch (err) {
     next(err);
   }
+
 }
 
