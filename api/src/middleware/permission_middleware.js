@@ -3,8 +3,7 @@ import { isOwner, isMember } from "../models/group_model.js";
 export async function requireOwner(req, res, next) {
   const groupId = req.params.groupId;
   const userId = req.user.userId;
-  console.log("userID : ", req.user.userId);
-
+  
   try {
     const owner = await isOwner(groupId, userId);
     if (!owner || owner.length === 0) {
@@ -20,7 +19,7 @@ export async function requireOwner(req, res, next) {
 export async function requireMember(req, res, next) {
   const groupId = req.params.groupId;
   const userId = req.user.userId;
-  console.log("userID : ", req.user.userId);
+  
   try {
     // Owner is always a member
     const owner = await isOwner(groupId, userId);
@@ -41,8 +40,7 @@ export async function requireSelfOrOwner(req, res, next) {
   const groupId = req.params.groupId;
   const targetUserId = parseInt(req.params.userId);
   const currentUserId = req.user.userId;
-  console.log("userID : ", req.user.userId);
-
+  
   try {
     if (currentUserId === targetUserId) return next();
 

@@ -21,8 +21,11 @@ export async function getReview(reviewId) {
 
 export async function getReviewByMediaId(mediaId) {
   const result = await pool.query(`
-    SELECT * FROM review
-    WHERE media_id = $1`,
+    SELECT r.review_id, r.media_id, r.user_id, r.review_text, r.rating, r.posted_at, u.email
+    FROM review r
+    JOIN users u ON r.user_id = u.user_id
+    WHERE r.media_id = $1
+    ORDER BY r.posted_at DESC`,
     [mediaId]
   );
   return result.rows;

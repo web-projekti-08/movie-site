@@ -93,19 +93,28 @@ export async function removeMember(groupId, userId) {
 
 // REQUESTS
 export async function createJoinRequest(groupId, userId) {
-  const result = await pool.query(`
-    INSERT INTO group_members (group_id, user_id, role)
-    VALUES ($1, $2, 'requested') RETURNING *`,
+  // Check existing
+  const exists = await pool.query(
+    `SELECT role FROM group_members WHERE group_id = $1 AND user_id = $2`,
     [groupId, userId]
   );
+  if (exists.rows.length > 0) return exists.rows[0];
 
+  const result = await pool.query(
+    `INSERT INTO group_members (group_id, user_id, role) VALUES ($1, $2, 'requested') RETURNING *`,
+    [groupId, userId]
+  );
   return result.rows[0];
 }
 
 export async function getJoinRequests(groupId) {
-  const result = await pool.query(`
-    SELECT * FROM group_members WHERE group_id = $1
-    AND role = 'requested'`, [groupId]);
+  const result = await pool.query(
+    `SELECT gm.user_id, gm.role, u.email
+     FROM group_members gm
+     JOIN users u ON gm.user_id = u.user_id
+     WHERE gm.group_id = $1 AND gm.role = 'requested'`,
+    [groupId]
+  );
   return result.rows;
 }
 

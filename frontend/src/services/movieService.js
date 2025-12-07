@@ -1,51 +1,67 @@
-import axios from "axios";
-const API = process.env.REACT_APP_API_URL;
+import { API_URL } from "./authApi";
+import { authFetch } from "./authFetch";
 
-const getAuthHeader = () => {
-  const token = localStorage.getItem("accessToken");
-  return token ? { Authorization: `Bearer ${token}` } : {};
-};
 
-export async function fetchMovieDetails(id) {
-  const res = await axios.get(`${API}/movie/${id}`);
-  return res.data.details;
+export async function fetchMovieDetails(movieId) {
+  const res = await fetch(`${API_URL}/movie/${movieId}`);
+  if (!res.ok) throw new Error("Failed fetching movie details");
+  return res.json();
 }
 
-export async function fetchMovieReviews(id) {
-  try {
-    const res = await axios.get(`${API}/review/media/${id}`);
-    if (!Array.isArray(res.data)) return [];
-    return res.data;
-  } catch (err) {
-    console.error("Failed to fetch reviews:", err.message);
-    return [];
+export async function fetchMovieReviews(movieId) {
+  const res = await fetch(`${API_URL}/review/${movieId}`);
+  if (!res.ok) throw new Error("Failed fetching reviews");
+  return res.json();
+}
+
+export async function postReview(movieId, text, rating) {
+  // Käytetään authFetch-funktiota, joka lisää Authorization-headerin
+  // Mahdollistaa suojattujen endpointien kutsumisen
+  // Vain kirjautuneet käyttäjät voivat lähettää arvosteluja
+  const res = await authFetch(`/review/${movieId}`, {
+    method: "POST",
+    body: JSON.stringify({ review_text: text, rating})
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || "Failed posting review");
   }
+  return res.json();
 }
 
-export async function postReview(mediaId, reviewText, rating) {
-  return axios.post(`${API}/review`,
-    { mediaId, text: reviewText, rating },
-    { headers: getAuthHeader() }
-  );
+export async function addFavorite(movieId) {
+  // Vain kirjautuneet käyttäjät voivat lisätä suosikkeihin
+  const res = await authFetch(`/favorite`, {
+    method: "POST",
+    body: JSON.stringify({ mediaId: movieId })
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || "Failed adding movie to favorites");
+  }
+  return res.json();
 }
 
-export async function addFavorite(mediaId) {
-  return axios.post(`${API}/favorite/`,
-    { mediaId },
-    { headers: getAuthHeader() }
-  );
-}
-
-export async function addMovieToGroup(groupId, mediaId) {
-  return axios.post(`${API}/groups/${groupId}/content`,
-    { mediaId },
-    { headers: getAuthHeader() }
-  );
+export async function addMovieToGroup(groupId, movieId) {
+  // Vain kirjautuneet käyttäjät voivat lisätä elokuvia ryhmiin
+  const res = await authFetch(`/groups/${groupId}/content`, {
+    method: "POST",
+    body: JSON.stringify({ mediaId: movieId })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || "Failed adding movie to group");
+  }
+  return res.json();
 }
 
 export async function fetchUserGroups() {
-  const res = await axios.get(`${API}/groups/user`,
-    { headers: getAuthHeader() }
-  );
-  return res.data;
+  // Vain kirjautuneet käyttäjät voivat hakea omat ryhmänsä
+  const res = await authFetch(`/groups/user`);
+  if (!res.ok) {
+    console.error("Failed fetching groups:", res.status);
+    return [];
+  }
+  return res.json();
 }

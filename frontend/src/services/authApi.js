@@ -1,4 +1,4 @@
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+export const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
 export async function register(email, password) {
   const res = await fetch(`${API_URL}/user/register`, {
@@ -12,14 +12,14 @@ export async function register(email, password) {
     throw new Error(err.error || "Registration failed");
   }
 
-  return res.json(); // { message, user: { userId, email } }
+  return res.json();
 }
 
 export async function login(email, password) {
   const res = await fetch(`${API_URL}/user/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    credentials: "include", // send cookies
+    credentials: "include", // lähettää cookiet (refresh token)
     body: JSON.stringify({ email, password })
   });
 
@@ -28,7 +28,7 @@ export async function login(email, password) {
     throw new Error(err.error || "Login failed");
   }
 
-  return res.json(); // { message, accessToken, user: { userId, email } }
+  return res.json(); // { accessToken }
 }
 
 export async function logout() {
@@ -38,11 +38,25 @@ export async function logout() {
   });
 
   if (!res.ok) throw new Error("Logout failed");
-  return res.json(); // { message }
+  return res.json();
+}
+
+// Käyttäjätietojen haku tokenilla
+export async function getProfile(token) {
+  if (!token) return null;
+
+  const res = await fetch(`${API_URL}/user/profile`, {
+    method: "GET",
+    headers: { "Authorization": `Bearer ${token}` },
+    credentials: "include"
+  });
+
+  if (!res.ok) return null;
+  return res.json(); // { userId, email, groups, etc }
 }
 
 export async function deleteAccount() {
-  const token = localStorage.getItem('accessToken'); // get JWT from localStorage
+  const token = localStorage.getItem('accessToken');
   if (!token) throw new Error("Access token missing");
 
   const res = await fetch(`${API_URL}/user/delete`, {
@@ -59,5 +73,5 @@ export async function deleteAccount() {
     throw new Error(err.error || "Delete failed");
   }
 
-  return res.json(); // { message }
+  return res.json();
 }

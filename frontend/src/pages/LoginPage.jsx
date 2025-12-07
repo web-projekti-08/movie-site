@@ -1,12 +1,18 @@
+/*
+  Kaikki kirjautumiseen liittyvät toiminnot, kuten lomake ja validointi - hoidetaan AuthContextin kautta:
+  const { login } = useAuth();
+*/
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login } from '../services/authApi';
+import { useAuth } from "../context/AuthContext";
 
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,11 +24,8 @@ function LoginPage() {
     }
 
     try {
-      const response = await login(email, password);
-      localStorage.setItem('accessToken', response.accessToken);
-      localStorage.setItem('userId', response.user.userId);
-      localStorage.setItem('userEmail', response.user.email);
-      navigate('/profile');
+      await login(email, password);
+      navigate('/');
     } catch (err) {
       setError(err.message);
     }

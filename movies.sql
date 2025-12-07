@@ -38,14 +38,6 @@ CREATE TABLE group_content (
   media_id INT NOT NULL
 );
 
-CREATE TABLE group_chat (
-  post_id SERIAL PRIMARY KEY,
-  user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
-  group_id INT REFERENCES groups(group_id) ON DELETE CASCADE,
-  post_text TEXT NOT NULL,
-  post_date TIMESTAMP DEFAULT NOW()
-);
-
 CREATE TABLE review (
   review_id SERIAL PRIMARY KEY,
   media_id INT NOT NULL,
