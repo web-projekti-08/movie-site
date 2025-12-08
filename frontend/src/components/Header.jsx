@@ -3,7 +3,7 @@ import '../App.css'
 
 export default function Header() {
   return (
-    <header>
-    </header>
+    <header className="banner"></header>
+
   )
 }

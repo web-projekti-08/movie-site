@@ -50,7 +50,7 @@ main {
   border: none;
   border-radius: var(--border-radius);
   cursor: pointer;
-}
+}*/
 
 .btn:disabled {
   opacity: 0.6;
@@ -166,6 +166,21 @@ input:focus, select:focus, textarea:focus {
   flex: 1;
 }
 
+.movies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
+  margin-top: 1rem;
+}
+
+.movie-card {
+  background: #f8f9fa;
+  padding: 8px;
+  border-radius: 6px;
+  text-align: center;
+}
+
+
 .button-row {
   display: flex;
   gap: var(--spacing-sm);
@@ -233,3 +248,18 @@ footer {
   text-align: center;
   padding: var(--spacing-md);
 }
+
+/* =========================
+   JOIN GROUP KORTIT
+========================= */
+.join-groups-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem; /* väli korttien väliin */
+}
+
+.join-groups-wrapper .card {
+  flex: 1 1 calc(20% - 1rem); /* viisi korttia riviin */
+  max-width: calc(20% - 1rem);
+}
+
