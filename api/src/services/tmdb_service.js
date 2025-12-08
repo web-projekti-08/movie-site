@@ -20,7 +20,28 @@ async function callTMDb(endpoint) {
 
 
 export async function searchTMDbMovies({ query, rating, minYear, maxYear, genre }) {
-  const data = await callTMDb(`/search/movie?query=${encodeURIComponent(query)}`);
+  let data;
+
+  if (query) {
+    data = await callTMDb(`/search/movie?query=${encodeURIComponent(query)}`);
+  } else {
+    let discoverUrl = "/discover/movie?sort_by=popularity.desc";
+    
+    if (genre != null) {
+      discoverUrl += `&with_genres=${genre}`;
+    }
+    if (minYear != null) {
+      discoverUrl += `&primary_release_date.gte=${minYear}-01-01`;
+    }
+    if (maxYear != null) {
+      discoverUrl += `&primary_release_date.lte=${maxYear}-12-31`;
+    }
+    if (rating != null) {
+      discoverUrl += `&vote_average.gte=${rating}`;
+    }
+    
+    data = await callTMDb(discoverUrl);
+  }
 
   let movies = data.results.map(m => {
     const year = m.release_date ? parseInt(m.release_date.substring(0, 4)) : null;
@@ -36,18 +57,19 @@ export async function searchTMDbMovies({ query, rating, minYear, maxYear, genre 
     };
   });
 
-  // apply filters after search because tmdb query with filters doesn't work on single endpoint
-  if (rating != null)
-    movies = movies.filter(m => m.rating != null && m.rating >= rating);
+  if (query) {
+    if (rating != null)
+      movies = movies.filter(m => m.rating != null && m.rating >= rating);
 
-  if (minYear != null)
-    movies = movies.filter(m => m.year != null && m.year >= minYear);
+    if (minYear != null)
+      movies = movies.filter(m => m.year != null && m.year >= minYear);
 
-  if (maxYear != null)
-    movies = movies.filter(m => m.year != null && m.year <= maxYear);
+    if (maxYear != null)
+      movies = movies.filter(m => m.year != null && m.year <= maxYear);
 
-  if (genre != null)
-    movies = movies.filter(m => m.genres && m.genres.includes(genre));
+    if (genre != null)
+      movies = movies.filter(m => m.genres && m.genres.includes(genre));
+  }
 
   return movies;
 }

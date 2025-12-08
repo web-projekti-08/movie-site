@@ -15,12 +15,8 @@ export async function searchMovies(req, res) {
       genre
     } = req.query;
 
-    if (!query || !query.trim()) {
-      return res.status(400).json({ error: "query parameter is required" });
-    }
-
     const results = await searchTMDbMovies({
-      query,
+      query: query ? query.trim() : null,
       rating: rating ? Number(rating) : null,
       minYear: minYear ? Number(minYear) : null,
       maxYear: maxYear ? Number(maxYear) : null,

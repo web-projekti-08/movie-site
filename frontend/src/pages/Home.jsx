@@ -44,8 +44,8 @@ export default function Home() {
 
   // Handle search
   const handleSearch = async () => {
-    if (!searchTerm.trim()) {
-      setSearchError("Please enter a search term.");
+    if (!searchTerm.trim() && !genre && !minYear && !maxYear && !rating) {
+      setSearchError("Please enter a search term or filter.");
       setSearchResults(null);
       return;
     }
@@ -56,9 +56,8 @@ export default function Home() {
 
     try {
       const url = new URL(`${API_BASE}/movie/search`);
-      url.searchParams.append("query", searchTerm.trim());
+      if (searchTerm.trim()) url.searchParams.append("query", searchTerm.trim());
 
-      // Filters
       if (genre) url.searchParams.append("genre", genre);
       if (minYear) url.searchParams.append("minYear", minYear);
       if (maxYear) url.searchParams.append("maxYear", maxYear);
