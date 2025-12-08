@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "../App.css";
+import "./Home.css";
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");

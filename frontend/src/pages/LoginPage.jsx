@@ -6,6 +6,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../context/AuthContext";
+import "./Login.css";
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -32,30 +33,34 @@ function LoginPage() {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px' }}>
-      <h2>Login</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          style={{ width: '100%', padding: '8px', marginBottom: '10px', boxSizing: 'border-box' }}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={{ width: '100%', padding: '8px', marginBottom: '10px', boxSizing: 'border-box' }}
-        />
-        <button type="submit" style={{ width: '100%', padding: '10px', cursor: 'pointer' }}>
-          Login
-        </button>
-      </form>
-    </div>
-  );
+  <div className="auth-container">
+    <h2>Login</h2>
+
+    {error && <p className="auth-error">{error}</p>}
+
+    <form onSubmit={handleSubmit} className="auth-form">
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+
+      <button type="submit">Login</button>
+    </form>
+
+    <p className="auth-switch">
+      Don't have an account? <a href="/register">Register</a>
+    </p>
+  </div>
+);
+
 }
 
 export default LoginPage;

@@ -1,0 +1,86 @@
+
+.app-container {
+  width: 90%;
+  max-width: 1100px;
+  margin: auto;
+  padding-top: 30px;
+  font-family: Arial, sans-serif;
+  color: #fff;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Search section */
+.search-section {
+  background: #1b1b1b;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.search-input-row {
+  display: flex;
+  gap: 10px;
+}
+
+.search-input,
+input,
+select {
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+}
+
+button {
+  padding: 10px 15px;
+  border-radius: 6px;
+  border: none;
+  background: #3498db;
+  cursor: pointer;
+  color: #fff;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #2179b5;
+}
+
+.filter-bar {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.error-message {
+  color: #ff5c5c;
+  margin-top: 10px;
+}
+
+/* Movie grid */
+.movies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.movie-card {
+  background: #222;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  transition: 0.2s;
+}
+
+.movie-card:hover {
+  transform: scale(1.05);
+}
+
+.movie-card img {
+  width: 100%;
+  border-radius: 6px;
+}

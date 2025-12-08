@@ -1,0 +1,7 @@
+@import "./Login.css";
+
+/* Additional register-specific overrides (if needed later) */
+.auth-success {
+  color: #4ff77a;
+  margin-bottom: 10px;
+}
