@@ -3,7 +3,7 @@
   Vain kirjautuneet käyttäjät voivat lisätä elokuvan suosikkeihin, ryhmiin ja kirjoittaa arvosteluja.
 */
 
-import '../App.css';
+import './MoviePage.css';
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {

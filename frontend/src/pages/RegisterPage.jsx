@@ -6,6 +6,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../context/AuthContext";
+import "./Register.css";
 
 function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -52,40 +53,41 @@ function RegisterPage() {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px' }}>
-      <h2>Register</h2>
+  <div className="auth-container">
+    <h2>Register</h2>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {success && <p style={{ color: 'green' }}>{success}</p>}
+    {error && <p className="auth-error">{error}</p>}
+    {success && <p className="auth-success">{success}</p>}
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          style={{ width: '100%', padding: '8px', marginBottom: '10px', boxSizing: 'border-box' }}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={{ width: '100%', padding: '8px', marginBottom: '10px', boxSizing: 'border-box' }}
-        />
-        <input
-          type="password"
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          style={{ width: '100%', padding: '8px', marginBottom: '10px', boxSizing: 'border-box' }}
-        />
-        <button type="submit" style={{ width: '100%', padding: '10px', cursor: 'pointer' }}>
-          Register
-        </button>
-      </form>
-    </div>
-  );
+    <form onSubmit={handleSubmit} className="auth-form">
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Confirm Password"
+        value={confirmPassword}
+        onChange={(e) => setConfirmPassword(e.target.value)}
+      />
+
+      <button type="submit">Register</button>
+    </form>
+
+    <p className="auth-switch">
+      Already have an account? <a href="/login">Login</a>
+    </p>
+  </div>
+);
+
 }
 
 export default RegisterPage;
