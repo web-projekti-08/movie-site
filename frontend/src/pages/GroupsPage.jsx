@@ -27,28 +27,28 @@ export default function GroupsPage() {
   const [showCreateForm, setShowCreateForm] = useState(false);
 
   async function loadGroups() {
-    if (!user) return;
-
     const all = await getGroups();
     setAllGroups(all);
+    
+    if (user) {
+      // LUODUT RYHMÄT
+      const created = all.filter((g) => g.owner_id === user.userId);
+      setGroups(created);
 
-    // LUODUT RYHMÄT
-    const created = all.filter((g) => g.owner_id === user.userId);
-    setGroups(created);
-
-    // LIITTYMISPYYNNÖT HAETAAN KAIKILLE KÄYTTÄJÄN LUOMILLE RYHMILLE
-    const reqs = [];
-    for (const g of created) {
-      const r = await getRequests(g.group_id).catch(() => []);
-      reqs.push(
-        ...r.map((x) => ({
-          ...x,
-          groupName: g.group_name,
-          groupId: g.group_id,
-        }))
-      );
+      // LIITTYMISPYYNNÖT HAETAAN KAIKILLE KÄYTTÄJÄN LUOMILLE RYHMILLE
+      const reqs = [];
+      for (const g of created) {
+        const r = await getRequests(g.group_id).catch(() => []);
+        reqs.push(
+          ...r.map((x) => ({
+            ...x,
+            groupName: g.group_name,
+            groupId: g.group_id,
+          }))
+        );
+      }
+      setRequests(reqs);
     }
-    setRequests(reqs);
   }
 
   useEffect(() => {
@@ -61,21 +61,24 @@ export default function GroupsPage() {
       <JoinableGroupsList groups={allGroups} />
 
       {/* KÄYTTÄJÄN LUOMAT RYHMÄT LISTA, KÄYTTÄÄ CreatedGroupsList KOMPONENTTIA */ }
-      <CreatedGroupsList
-        groups={groups}
-        onDelete={async (id) => {
-          await deleteGroup(id);
-          loadGroups();
-        }}
-      />
-
-      <button
-        className="btn btn-primary btn-sm mt-4"
-        onClick={() => setShowCreateForm(true)}
-      >
-        Create new group
-      </button>
-      
+      {user && (
+        <CreatedGroupsList
+          groups={groups}
+          onDelete={async (id) => {
+            await deleteGroup(id);
+            loadGroups();
+          }}
+        />
+        )}
+      {user && (
+        <button
+          className="btn btn-primary btn-sm mt-4"
+          onClick={() => setShowCreateForm(true)}
+        >
+          Create new group
+        </button>
+      )}
+    
       {/* UUDEN RYHMÄN LUONTI FORM, KÄYTTÄÄ JoinableGroupsList KOMPONENTTIA */ }
       {showCreateForm && (
         <CreateGroupForm
@@ -88,17 +91,19 @@ export default function GroupsPage() {
       )}
 
       {/* LIITTYMISPYYNNÖT LISTA, KÄYTTÄÄ RequestsList KOMPONENTTIA */ }
-      <RequestsList
-        requests={requests}
-        onAccept={async (gid, uid) => {
-          await acceptRequest(gid, uid);
-          setRequests((prev) => prev.filter((r) => r.user_id !== uid));
-        }}
-        onReject={async (gid, uid) => {
-          await rejectRequest(gid, uid);
-          setRequests((prev) => prev.filter((r) => r.user_id !== uid));
-        }}
-      />
+      {user && (
+        <RequestsList
+          requests={requests}
+          onAccept={async (gid, uid) => {
+            await acceptRequest(gid, uid);
+            setRequests((prev) => prev.filter((r) => r.user_id !== uid));
+          }}
+          onReject={async (gid, uid) => {
+            await rejectRequest(gid, uid);
+            setRequests((prev) => prev.filter((r) => r.user_id !== uid));
+          }}
+        />
+      )}
     </>
   );
 }
