@@ -4,7 +4,7 @@ const API_URL = process.env.REACT_APP_API_URL
 
 // GET kaikki ryhmät
 export async function getGroups() {
-  const res = await authFetch("/groups");
+  const res = await fetch(`${API_URL}/groups`);
   if (!res.ok) return [];
   return await res.json();
 }
