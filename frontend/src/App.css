@@ -9,6 +9,7 @@
   --spacing-md: 1rem;
   --spacing-lg: 2rem;
 
+
   /* EHKÄ TULEVAISUUTTA VARTEN? */
   --color-primary: ;
   --color-secondary: ;
@@ -250,7 +251,7 @@ footer {
 }
 
 /* =========================
-   JOIN GROUP KORTIT
+   ALL GROUPS JA CREATED GROUPS KORTIT
 ========================= */
 .join-groups-wrapper {
   display: flex;
@@ -261,5 +262,33 @@ footer {
 .join-groups-wrapper .card {
   flex: 1 1 calc(20% - 1rem); /* viisi korttia riviin */
   max-width: calc(20% - 1rem);
+  background-color: #292929;
+  border-radius: 15px;
+}
+
+.created-groups-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.created-groups-wrapper .card {
+  flex: 1 1 calc(20% - 1rem); /* viisi korttia riviin */
+  max-width: calc(20% - 1rem);
+  background-color: #292929;
+  border-radius: 15px;
+}
+
+.card.small-card {
+  background-color: #292929;
+  border-radius: 15px;
+}
+
+.card.small-card h5 {
+  color: #71a4f1;
+}
+
+.card.small-card p {
+  color: rgb(241, 240, 240);
 }
 

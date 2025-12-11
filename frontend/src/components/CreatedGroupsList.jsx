@@ -11,7 +11,7 @@ export default function CreatedGroupsList({ groups, onDelete }) {
   return (
     <>
       <h4 className="mt-4">Created groups</h4>
-      <div className="mt-4 card-group">
+      <div className="mt-4 created-groups-wrapper">
         {groups.map(group => (
           <div
             className="card small-card"
@@ -30,7 +30,7 @@ export default function CreatedGroupsList({ groups, onDelete }) {
                   onDelete(group.group_id);
                 }}
               >
-                Delete
+                Delete group
               </button>
             </div>
           </div>

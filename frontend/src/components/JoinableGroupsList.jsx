@@ -10,7 +10,7 @@ export default function JoinableGroupsList({ groups }) {
 
   return (
     <>
-      <h4 className="mt-4">Join group</h4>
+      <h4 className="mt-4">All groups</h4>
       <div className="mt-4 join-groups-wrapper">
         {groups.map(group => (
           <div className="card small-card" key={group.group_id}>
