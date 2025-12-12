@@ -5,12 +5,16 @@ Projektin toimeksiantona on toteuttaa leffaharrastajille websivusto. Sovellus hy
 
 ## Testing
 ### Local testing with npm:
-1. Install dependencies:
+1. Create test database:
+```bash
+createdb -U postgres netdb_test
+```
+2. Install dependencies:
 ```bash
 cd api
 npm install
 ```
-2.  Run tests:
+3. Run tests:
 ```bash
 npm test
 ```
