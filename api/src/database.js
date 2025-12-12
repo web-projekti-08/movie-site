@@ -9,9 +9,13 @@ if (process.env.NODE_ENV === "test") {
   dotenv.config(); // .env
 }
 
-const connectionString = process.env.NODE_ENV === "test"
-  ? process.env.TEST_DATABASE_URL
-  : process.env.DATABASE_URL;
+// Host joko dockerin tai local perusteella
+const host = process.env.TEST_DB_HOST || "localhost";
+
+const connectionString =
+  process.env.NODE_ENV === "test"
+    ? `postgres://${process.env.TEST_DB_USER}:${process.env.TEST_DB_PASSWORD}@${host}:${process.env.TEST_DB_PORT}/${process.env.TEST_DB_NAME}`
+    : process.env.DATABASE_URL;
 
 
 const pool = new Pool({

@@ -11,11 +11,8 @@ beforeAll(async () => {
   await setupTestDB();
 });
 
-// Nollaa tietokanta ja sulje yhteys testien jälkeen
+// Sulje yhteys testien jälkeen
 afterAll(async () => {
-  await pool.query(
-    "TRUNCATE users, groups, group_members, review, favorite RESTART IDENTITY CASCADE"
-  );
   await pool.end();
 });
 

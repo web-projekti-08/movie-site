@@ -17,9 +17,6 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await pool.query(
-    "TRUNCATE users, groups, group_members, review, favorite RESTART IDENTITY CASCADE"
-  );
   await pool.end();
 });
 
