@@ -1,0 +1,27 @@
+services:
+  api-test:
+    build: ./api
+    container_name: api_test
+    environment:
+      NODE_ENV: test
+      TEST_DATABASE_URL: postgres://netuser:netpass@db-test:5432/netdb_test
+      JWT_ACCESS_SECRET: testsecret
+      JWT_REFRESH_SECRET: testsecret
+    depends_on:
+      - db-test
+    command: ["npm", "test"]
+    volumes:
+      - ./api:/usr/src/app
+
+  db-test:
+    image: postgres:16
+    container_name: postgres_test
+    environment:
+      POSTGRES_DB: netdb_test
+      POSTGRES_USER: netuser
+      POSTGRES_PASSWORD: netpass
+    ports:
+      - "55432:5432"
+    # Tietokanta dockerin muistiin volumen sijasta, testi koska erroreita.
+    volumes:
+      - ./movies.sql:/docker-entrypoint-initdb.d/01-movies.sql:ro
