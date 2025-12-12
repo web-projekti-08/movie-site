@@ -1,6 +1,8 @@
 services:
   api-test:
-    build: ./api
+    build:
+      context: ./api
+      dockerfile: Dockerfile.test
     container_name: api_test
     environment:
       NODE_ENV: test
@@ -9,9 +11,6 @@ services:
       JWT_REFRESH_SECRET: testsecret
     depends_on:
       - db-test
-    command: ["npm", "test"]
-    volumes:
-      - ./api:/usr/src/app
 
   db-test:
     image: postgres:16
@@ -22,6 +21,5 @@ services:
       POSTGRES_PASSWORD: netpass
     ports:
       - "55432:5432"
-    # Tietokanta dockerin muistiin volumen sijasta, testi koska erroreita.
     volumes:
       - ./movies.sql:/docker-entrypoint-initdb.d/01-movies.sql:ro
