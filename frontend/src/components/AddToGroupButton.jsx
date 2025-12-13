@@ -32,14 +32,20 @@ export default function AddToGroupButton({ movieId, onAdd }) {
 
   return (
     <div>
-      <select value={selectedGroup} onChange={e => setSelectedGroup(e.target.value)} disabled={loading}>
+      <select className="group-select" value={selectedGroup} 
+        onChange={e => setSelectedGroup(e.target.value)} 
+        disabled={loading}
+      >
         <option value="">Select a group</option>
-        {userGroups.map(g => (
-          <option key={g.group_id} value={g.group_id}>
-            {g.group_name} {g.role && `(${g.role})`}
-          </option>
-        ))}
+        {userGroups
+          .filter(g => g.role !== "requested")
+          .map(g => (
+            <option key={g.group_id} value={g.group_id}>
+              {g.group_name}
+            </option>
+          ))}
       </select>
+
       <button onClick={handleClick} disabled={loading}>
         {loading ? "Adding..." : "Add to Group"}
       </button>
