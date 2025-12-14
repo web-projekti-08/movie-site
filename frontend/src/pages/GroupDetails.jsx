@@ -17,6 +17,7 @@ import { fetchMovieDetails } from "../services/movieService";
 import MovieCard from "../components/MovieCard";
 import GroupMembers from "../components/GroupMembers";
 import JoinGroupButton from "../components/JoinGroupButton";
+import './GroupDetails.css';
 
 export default function GroupDetails() {
   const { groupId } = useParams();
@@ -97,15 +98,17 @@ export default function GroupDetails() {
   const userIsMember = isMemberInGroup(group.group_id);
 
    return (
-    <div>
-      <div>
+    <div className="group-details-page">
+      {/* Header */}
+      <div className="group-header">
         <h2>{group.group_name}</h2>
         <p>{group.description}</p>
       </div>
 
-      {/* JÄSENLISTA, KÄYTTÄÄ GroupMembers KOMPONENTTIA */ }
+      {/* Members (if member or owner) */}
       {(userIsOwner || userIsMember) && (
-        <>
+        <div className="group-members-section">
+          <h4>Members</h4>
           <GroupMembers
             members={members}
             ownerId={group.owner_id}
@@ -113,9 +116,12 @@ export default function GroupDetails() {
             onRemove={handleRemoveMember}
             onLeave={handleLeaveGroup}
           />
+        </div>
+      )}
 
-          {/* ELOKUVAT, KÄYTTÄÄ MovieCard KOMPONENTTIA */ }
-          <div>
+      {/* Movies (if member or owner) */}
+      {(userIsOwner || userIsMember) && (
+        <div className="group-content-section">
           <h4>Group Movies</h4>
           <div className="movies-grid">
             {content.map((c) => (
@@ -123,12 +129,16 @@ export default function GroupDetails() {
             ))}
           </div>
         </div>
-
-        </>
       )}
-      {/* LIITTYMISPYYNTÖ NAPPI KÄYTTÄÄ JoinGroupButton KOMPONENTTIA */ }
+
+      {/* Join Button */}
       {!userIsMember && !userIsOwner && (
-        <JoinGroupButton onRequest={handleJoinRequest} joinRequested={joinRequested} />
+        <div className="join-button-section">
+          <JoinGroupButton 
+            onRequest={handleJoinRequest} 
+            joinRequested={joinRequested} 
+          />
+        </div>
       )}
     </div>
   );

@@ -11,14 +11,19 @@ export default function ReviewList({ reviews }) {
         <div key={i} className="review-item">
           <strong>{r.email || "Anonymous"}:</strong>
           <div className="review-stars">
-            {[1,2,3,4,5].map((star) => (
-              <span
-                key={star}
-                className={`star ${star <= r.rating ? "selected" : ""}`}
-              >
-                ★
-              </span>
-            ))}
+            {[1, 2, 3, 4, 5].map((star) => (
+  <span
+    key={star}
+    style={{
+      color: star <= r.rating ? "#f5c518" : "#555",
+      fontSize: "18px",
+      marginRight: "2px"
+    }}
+  >
+    ★
+  </span>
+))}
+
           </div>
           <p>{r.review_text}</p>
         </div>

@@ -1,70 +1,50 @@
-
-
 .profile-container {
-  width: 90%;
-  max-width: 900px;
+  max-width: 1000px;
   margin: auto;
-  color: white;
-  font-family: Arial, sans-serif;
 }
 
 .profile-header {
-  text-align: center;
-  background: #1b1b1b;
-  padding: 20px;
-  border-radius: 10px;
+  background: var(--bg-card);
+  padding: 30px;
+  border-radius: 16px;
   margin-bottom: 20px;
 }
 
 .profile-tabs {
   display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: 20px;
+  background: var(--bg-card);
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 20px;
 }
 
 .profile-tabs button {
-  padding: 10px 15px;
-  background: #333;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
+  background: none;
+  color: var(--text-muted);
+  padding: 10px 20px;
+  border-bottom: 3px solid transparent;
 }
 
-.profile-tabs .active {
-  background: #3498db;
+.profile-tabs button.active {
+  color: white;
+  border-bottom-color: var(--accent);
 }
 
 .profile-content {
-  background: #1b1b1b;
-  padding: 20px;
-  border-radius: 10px;
+  background: var(--bg-card);
+  padding: 30px;
+  border-radius: 16px;
 }
 
-/* Cards */
-.favorite-card,
 .review-card {
-  background: #222;
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: space-between;
+  background: var(--bg-card-light);
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 15px;
 }
 
-.favorite-card button,
-.review-card button {
-  background: #e74c3c;
-  border-radius: 6px;
-  color: white;
-  cursor: pointer;
-  padding: 6px 10px;
+/* Make the review movie title white (only) */
+.review-movie-title {
+  color: #ffffff;
 }
-
-.favorite-card button:hover,
-.review-card button:hover {
-  background: #c0392b;
-}
-
-.error-text { color: #ff5c5c; text-align:center; margin-bottom:10px; }
-.profile-loading { text-align:center; padding:40px; }

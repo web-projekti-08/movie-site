@@ -17,6 +17,7 @@ import JoinableGroupsList from "../components/JoinableGroupsList";
 import CreatedGroupsList from "../components/CreatedGroupsList";
 import CreateGroupForm from "../components/CreateGroupForm";
 import RequestsList from "../components/RequestsList";
+import './GroupsPage.css';
 
 export default function GroupsPage() {
   const { user } = useAuth();
@@ -56,50 +57,62 @@ export default function GroupsPage() {
   }, [user]);
 
   return (
-    <> 
-      {/* KAIKKI RYHMÄT LISTA, KÄYTTÄÄ JoinableGroupsList KOMPONENTTIA */ }
-      <JoinableGroupsList groups={allGroups} />
+    <div className="groups-page">
+      {/* All Groups */}
+      <div className="groups-section">
+        <h3>All Groups</h3>
+        <JoinableGroupsList groups={allGroups} />
+      </div>
 
-      {/* KÄYTTÄJÄN LUOMAT RYHMÄT LISTA, KÄYTTÄÄ CreatedGroupsList KOMPONENTTIA */ }
-      <CreatedGroupsList
-        groups={groups}
-        onDelete={async (id) => {
-          await deleteGroup(id);
-          loadGroups();
-        }}
-      />
-
-      <button
-        className="btn btn-primary btn-sm mt-4"
-        onClick={() => setShowCreateForm(true)}
-      >
-        Create new group
-      </button>
-      
-      {/* UUDEN RYHMÄN LUONTI FORM, KÄYTTÄÄ JoinableGroupsList KOMPONENTTIA */ }
-      {showCreateForm && (
-        <CreateGroupForm
-          onClose={() => setShowCreateForm(false)}
-          onCreate={async (name, desc) => {
-            await createGroup(name, desc);
+      {/* Your Groups */}
+      <div className="groups-section">
+        <h3>Your Groups</h3>
+        <CreatedGroupsList
+          groups={groups}
+          onDelete={async (id) => {
+            await deleteGroup(id);
             loadGroups();
           }}
         />
+        <button
+          className="btn-create-group"
+          onClick={() => setShowCreateForm(true)}
+        >
+          Create New Group
+        </button>
+      </div>
+
+      {/* Create Form Modal */}
+      {showCreateForm && (
+        <div className="create-group-modal">
+          <CreateGroupForm
+            onClose={() => setShowCreateForm(false)}
+            onCreate={async (name, desc) => {
+              await createGroup(name, desc);
+              loadGroups();
+            }}
+          />
+        </div>
       )}
 
-      {/* LIITTYMISPYYNNÖT LISTA, KÄYTTÄÄ RequestsList KOMPONENTTIA */ }
-      <RequestsList
-        requests={requests}
-        onAccept={async (gid, uid) => {
-          await acceptRequest(gid, uid);
-          setRequests((prev) => prev.filter((r) => r.user_id !== uid));
-        }}
-        onReject={async (gid, uid) => {
-          await rejectRequest(gid, uid);
-          setRequests((prev) => prev.filter((r) => r.user_id !== uid));
-        }}
-      />
-    </>
+      {/* Requests */}
+      {requests.length > 0 && (
+        <div className="requests-section">
+          <h3>Join Requests</h3>
+          <RequestsList
+            requests={requests}
+            onAccept={async (gid, uid) => {
+              await acceptRequest(gid, uid);
+              setRequests((prev) => prev.filter((r) => r.user_id !== uid));
+            }}
+            onReject={async (gid, uid) => {
+              await rejectRequest(gid, uid);
+              setRequests((prev) => prev.filter((r) => r.user_id !== uid));
+            }}
+          />
+        </div>
+      )}
+    </div>
   );
 }
 

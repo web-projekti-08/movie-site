@@ -48,17 +48,18 @@ export default function ReviewForm({ onSubmit }) {
           </button>
         ))}
       </div>
+      <div className="review-submit">
+        <textarea className="review-text-field"
+          placeholder="Write your review..."
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          disabled={loading}
+        />
 
-      <textarea
-        placeholder="Write your review..."
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        disabled={loading}
-      />
-
-      <button type="submit" disabled={loading}>
-        {loading ? "Submitting..." : "Submit Review"}
-      </button>
+        <button className="review-submit-btn" type="submit" disabled={loading}>
+          {loading ? "Submitting..." : "Submit Review"}
+        </button>
+      </div>
     </form>
   );
 }

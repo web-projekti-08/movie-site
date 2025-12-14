@@ -1,75 +1,38 @@
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import "./Navbar.css";
 
-// Navigaation uloskirjautuminen hoidetaan AuthContextin kautta
 export default function Navbar() {
   const { user, logout, isLoading } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
-    await logout();
-    navigate('/');
-  };
-
   if (isLoading) return null;
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+    <nav className="nav">
+      <div className="nav-left">
+        <NavLink to="/" className="nav-logo">
+          MovieSite
+        </NavLink>
 
-      <NavLink className="navbar-brand" to="/">Movie-Site</NavLink>
+        <NavLink to="/" className="nav-link">Home</NavLink>
+        <NavLink to="/groups" className="nav-link">Groups</NavLink>
+        <NavLink to="/favorites" className="nav-link">Favorites</NavLink>
+      </div>
 
-      <div className="collapse navbar-collapse" id="navbarContent">
-        
-        <ul className="navbar-nav me-auto">
-          <li className="nav-item">
-            <NavLink className="nav-link" to="/" end>Home</NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink className="nav-link" to="/groups">Groups</NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink className="nav-link" to="/favorites">Favorites</NavLink>
-          </li>
-        </ul>
-
-        <ul className="navbar-nav ms-auto">
-          {!user && (
-            <>
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/login">Login</NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink className="btn btn-primary ms-2" to="/register">Register</NavLink>
-              </li>
-            </>
-          )}
-
-          {user && (
-            <li className="nav-item dropdown">
-              <a
-                className="nav-link dropdown-toggle d-flex align-items-center"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-              >
-                <img
-                  src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.email}`}
-                  className="rounded-circle me-2"
-                  width="32"
-                  height="32"
-                  alt="avatar"
-                />
-                <span>{user.email}</span>
-              </a>
-              <ul className="dropdown-menu dropdown-menu-end">
-                <li><NavLink className="dropdown-item" to="/profile">Profile</NavLink></li>
-                <li><NavLink className="dropdown-item" to="/settings">Settings</NavLink></li>
-                <li><hr className="dropdown-divider" /></li>
-                <li><button className="dropdown-item" onClick={handleLogout}>Logout</button></li>
-              </ul>
-            </li>
-          )}
-        </ul>
+      <div className="nav-right">
+        {!user ? (
+          <>
+            <NavLink to="/login" className="nav-link">Login</NavLink>
+            <NavLink to="/register" className="nav-btn">Register</NavLink>
+          </>
+        ) : (
+          <div className="nav-user">
+            <span>{user.email}</span>
+            <button onClick={() => navigate("/profile")}>Profile</button>
+            <button className="danger" onClick={logout}>Logout</button>
+          </div>
+        )}
       </div>
     </nav>
   );

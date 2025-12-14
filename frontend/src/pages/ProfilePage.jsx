@@ -1,172 +1,130 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import './ProfilePage.css';
+import { authFetch } from "../services/authFetch";
+import { fetchMovieDetails } from "../services/movieService";
+import FavoriteMovieGrid from "../components/FavoriteMovieGrid";
+import "./ProfilePage.css";
 
-function Profile() {
-  const navigate = useNavigate();
-  const { user, logout, deleteAccount } = useAuth(); // Auth functions from context
+export default function ProfilePage() {
+  const { user, logout, deleteAccount } = useAuth();
 
   const [favorites, setFavorites] = useState([]);
   const [reviews, setReviews] = useState([]);
-  const [activeTab, setActiveTab] = useState('favorites');
+  const [tab, setTab] = useState("favorites");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!user?.uid) {
-      navigate('/login');
-      return;
-    }
-    fetchUserData(user.uid);
-  }, [navigate, user]);
+    loadProfileData();
 
-  const fetchUserData = async (id) => {
+  }, []);
+
+  async function loadProfileData() {
     setLoading(true);
     try {
-      await Promise.all([fetchFavorites(id), fetchReviews(id)]);
+      const [favRes, revRes] = await Promise.all([
+        authFetch("/favorite"),
+        authFetch("/review/user"),
+      ]);
+
+      const favData = await favRes.json();
+      const revData = await revRes.json();
+
+      const favWithMovies = await Promise.all(
+        favData.map(async (fav) => {
+          const movie = await fetchMovieDetails(fav.media_id);
+          return { ...fav, movie: movie.details || movie };
+        })
+      );
+
+      setFavorites(favWithMovies);
+      const reviewsWithMovies = await Promise.all(
+  revData.map(async (r) => {
+    const movieData = await fetchMovieDetails(r.media_id);
+    const movie = movieData.details || movieData;
+
+    return {
+      ...r,
+      movieTitle: movie.title
+    };
+  })
+);
+
+setReviews(reviewsWithMovies);
+
     } catch (err) {
       console.error(err);
     } finally {
       setLoading(false);
     }
-  };
+  }
 
-  const fetchFavorites = async (id) => {
-    try {
-      const response = await fetch(`http://localhost:3000/favorites/${id}`);
-      if (response.ok) {
-        const data = await response.json();
-        setFavorites(data);
-      }
-    } catch (err) {
-      console.error('Error fetching favorites:', err);
-    }
-  };
+  async function handleRemoveFavorite(id) {
+    await authFetch(`/favorite/${id}`, { method: "DELETE" });
+    setFavorites((prev) => prev.filter((f) => f.favorite_id !== id));
+  }
 
-  const fetchReviews = async (id) => {
-    try {
-      const response = await fetch(`http://localhost:3000/reviews/user/${id}`);
-      if (response.ok) {
-        const data = await response.json();
-        setReviews(data);
-      }
-    } catch (err) {
-      console.error('Error fetching reviews:', err);
-    }
-  };
+  async function handleDeleteReview(id) {
+    await authFetch(`/review/${id}`, { method: "DELETE" });
+    setReviews((prev) => prev.filter((r) => r.review_id !== id));
+  }
 
-  const handleRemoveFavorite = async (favoriteId) => {
-    try {
-      const response = await fetch(
-        `http://localhost:3000/favorites/${user.uid}/${favoriteId}`,
-        { method: 'DELETE' }
-      );
-      if (response.ok) {
-        setFavorites(favorites.filter(f => f.favorite_id !== favoriteId));
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleDeleteReview = async (reviewId) => {
-    try {
-      const response = await fetch(
-        `http://localhost:3000/reviews/${reviewId}`,
-        { method: 'DELETE' }
-      );
-      if (response.ok) {
-        setReviews(reviews.filter(r => r.review_id !== reviewId));
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      navigate('/');
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
-  const handleDeleteAccount = async () => {
-    if (!window.confirm('Are you sure you want to delete your account?')) return;
-    try {
-      await deleteAccount();
-      navigate('/');
-    } catch (err) {
-      console.log(err);
-      setError(err.message);
-    }
-  };
-
-  if (loading) return <div className="profile-loading">Loading...</div>;
+  if (loading) return <p>Loading profile…</p>;
 
   return (
     <div className="profile-container">
-      <div className="profile-header">
-        <h2>{user?.email}</h2>
-        <p>{favorites.length} favorites · {reviews.length} reviews</p>
-      </div>
-
-      {error && <p className="error-text">{error}</p>}
+      <h2>{user.email}</h2>
+      <p>
+        {favorites.length} favorites · {reviews.length} reviews
+      </p>
 
       <div className="profile-tabs">
-        <button className={activeTab === 'favorites' ? 'active' : ''} onClick={() => setActiveTab('favorites')}>Favorites</button>
-        <button className={activeTab === 'reviews' ? 'active' : ''} onClick={() => setActiveTab('reviews')}>Reviews</button>
-        <button className={activeTab === 'settings' ? 'active' : ''} onClick={() => setActiveTab('settings')}>Settings</button>
+        <button onClick={() => setTab("favorites")} className={tab === "favorites" ? "active" : ""}>
+          Favorites
+        </button>
+        <button onClick={() => setTab("reviews")} className={tab === "reviews" ? "active" : ""}>
+          Reviews
+        </button>
+        <button onClick={() => setTab("settings")} className={tab === "settings" ? "active" : ""}>
+          Settings
+        </button>
       </div>
 
-      <div className="profile-content">
-        {activeTab === 'favorites' && (
-          <div>
-            <h3>Favorites</h3>
-            {favorites.map(fav => (
-              <div key={fav.favorite_id} className="favorite-card">
-                <div>
-                  <h4>Movie ID: {fav.media_id}</h4>
-                  <p>{new Date(fav.added_at).toLocaleDateString()}</p>
-                </div>
-                <button onClick={() => handleRemoveFavorite(fav.favorite_id)}>Remove</button>
-              </div>
-            ))}
-          </div>
-        )}
+      {tab === "favorites" && (
+        <FavoriteMovieGrid
+          favorites={favorites}
+          onRemove={handleRemoveFavorite}
+        />
+      )}
 
-        {activeTab === 'reviews' && (
-          <div>
-            <h3>Reviews</h3>
-            {reviews.map(review => (
-              <div key={review.review_id} className="review-card">
-                <div>
-                  <h4>Movie ID: {review.media_id}</h4>
-                  <p>Rating: {review.rating}/5</p>
-                  <p>{review.review_text}</p>
-                  <p>{new Date(review.posted_at).toLocaleDateString()}</p>
-                </div>
-                <button onClick={() => handleDeleteReview(review.review_id)}>Delete</button>
-              </div>
-            ))}
-          </div>
-        )}
+      {tab === "reviews" && (
+        <div>
+          {reviews.length === 0 && <p>No reviews yet.</p>}
+          {reviews.map((r) => (
+  <div key={r.review_id} className="review-card">
+    <h4 className="review-movie-title">
+      {r.movieTitle}
+    </h4>
 
-        {activeTab === 'settings' && (
-          <div>
-            <h3>Settings</h3>
-            <p>Email: {user?.email}</p>
-            <button onClick={handleLogout}>Logout</button>
-            <button style={{ backgroundColor: '#dc3545', color: 'white', marginTop: '10px' }} onClick={handleDeleteAccount}>
-              Delete Account
-            </button>
-          </div>
-        )}
-      </div>
+    <p>⭐ {r.rating}/5</p>
+    <p>{r.review_text}</p>
+
+    <button onClick={() => handleDeleteReview(r.review_id)}>
+      Delete
+    </button>
+  </div>
+))}
+
+        </div>
+      )}
+
+      {tab === "settings" && (
+        <div>
+          <button onClick={logout}>Logout</button>
+          <button onClick={deleteAccount} className="btn-danger">
+            Delete Account
+          </button>
+        </div>
+      )}
     </div>
   );
 }
-
-export default Profile;
