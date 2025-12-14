@@ -1,6 +1,7 @@
+import "dotenv/config";
 import jwt from "jsonwebtoken";
 
-const ACCESS_TOKEN_EXPIRY = "15m";
+const ACCESS_TOKEN_EXPIRY = "30m";
 const REFRESH_TOKEN_EXPIRY = "7d";
 
 export function generateAccessToken(userId, email) {

@@ -31,7 +31,7 @@ export async function getCurrentUser(req, res, next) {
     // Get groups
     const groups = await getUserGroups(userId);
 
-    res.json({
+    res.status(200).json({
       userId,
       email,
       groups // [{ group_id, group_name, role }]
@@ -78,13 +78,13 @@ export async function login(req, res, next) {
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
-    res.json({
+    res.status(200).json({
       message: "Login successful",
       accessToken,
       user: { userId: user.userId, email: user.email }
     });
   } catch (err) {
-    next(err);
+    res.status(500).json({ error: "Internal Server Error", details: err.message });
   }
 }
 
@@ -99,13 +99,13 @@ export async function refreshAccessToken(req, res, next) {
     const user = await getUserByRefreshToken(refreshToken);
     if (!user) return res.status(403).json({ error: "Invalid refresh token" });
 
-    const groups = await getUserGroups(user.user_id);
+    const groups = await getUserGroups(user.userId);
 
-    const accessToken = generateAccessToken(user.user_id, user.email);
+    const accessToken = generateAccessToken(user.userId, user.email);
     res.json({
       accessToken,
       user: {
-        userId: user.user_id,
+        userId: user.userId,
         email: user.email,
         groups
       }
