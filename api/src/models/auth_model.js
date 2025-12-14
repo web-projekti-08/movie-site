@@ -91,8 +91,6 @@ export async function deleteUser(userId) {
 
     await client.query("DELETE FROM group_members WHERE user_id = $1", [userId]);
 
-    await client.query("DELETE FROM group_chat WHERE user_id = $1", [userId]);
-
     await client.query("DELETE FROM review WHERE user_id = $1", [userId]);
 
     await client.query("DELETE FROM favorite WHERE user_id = $1", [userId]);
