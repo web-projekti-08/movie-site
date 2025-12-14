@@ -168,6 +168,16 @@ input:focus, select:focus, textarea:focus {
   flex: 1;
 }
 
+.movie-details-poster {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.movie-details-title {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
 .movies-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -182,11 +192,15 @@ input:focus, select:focus, textarea:focus {
   text-align: center;
 }
 
-
 .button-row {
   display: flex;
   gap: var(--spacing-sm);
   margin-top: var(--spacing-md);
+}
+
+.group-select {
+  width: 15rem;
+  margin-right: var(--spacing-md);
 }
 
 /* =========================
@@ -205,13 +219,36 @@ input:focus, select:focus, textarea:focus {
 }
 
 .review-item {
-  border-top: 1px solid #eee;
+  border-top: 1px solid #999;
   padding-top: var(--spacing-sm);
+}
+
+.review-date {
+  font-size: 0.7rem;
+  color: #999;
+}
+
+.review-submit {
+  display: flex;
+  flex-direction: column;
+}
+
+.review-text-field {
+  height: 8rem;
+  overflow: scroll;
+}
+
+.review-submit-btn {
+  width: 10rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--spacing-md);
 }
 
 /* TÄHTIEN TYYLI */
 .review-stars {
   display: inline-block;
+  color: gold;
 }
 
 .star {

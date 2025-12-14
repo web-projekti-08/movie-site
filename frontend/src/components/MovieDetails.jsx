@@ -2,16 +2,18 @@ export default function MovieDetails({ movie }) {
   return (
     <div>
       <div>
-        {movie.poster_path ? (
-        <img src={`https://image.tmdb.org/t/p/w300/${movie.poster_path}`} alt={movie.title} />
-        ) : (
-          <div>No poster available</div>
-        )}
+        <h2 className="movie-details-title">{movie.title}</h2>
+        <div className="movie-details-poster">
+          {movie.poster_path ? (
+          <img src={`https://image.tmdb.org/t/p/w300/${movie.poster_path}`} alt={movie.title} />
+          ) : (
+            <div>No poster available</div>
+          )}
+        </div>
         <div>
-          <h2>{movie.title}</h2>
           <p>{movie.overview}</p>
           <strong>Rating</strong>
-          <p>{movie.vote_average} / 10 ({movie.vote_count} votes)</p>
+          <p>{Math.round(movie.vote_average * 10)/10} / 10 ({movie.vote_count} votes)</p>
           {movie.genres && movie.genres.length > 0 && (
             <>
               <strong>Genres</strong>
