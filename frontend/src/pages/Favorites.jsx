@@ -4,11 +4,13 @@ import { authFetch } from "../services/authFetch";
 import { fetchMovieDetails } from "../services/movieService";
 import FavoriteMovieGrid from "../components/FavoriteMovieGrid";
 import { useAuth } from "../context/AuthContext";
+import { API_URL } from "../services/authApi";
+
 import "./Favorites.css";
 
 export default function Favorites() {
   const { shareId } = useParams();
-  const { user, accessToken } = useAuth();
+  const { user } = useAuth();
 
   const [favorites, setFavorites] = useState([]);
   const [sharedEmail, setSharedEmail] = useState(null);
@@ -16,23 +18,6 @@ export default function Favorites() {
   const [loading, setLoading] = useState(true);
 
   const isSharedView = Boolean(shareId);
-
-  // ✅ DEFINE FUNCTION BEFORE JSX USE
-  const handleCreateShareLink = async () => {
-    try {
-      const res = await fetch("http://localhost:3000/favorite/share/create", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`
-        }
-      });
-
-      const data = await res.json();
-      setShareUrl(data.shareUrl);
-    } catch (err) {
-      console.error("Failed to create share link", err);
-    }
-  };
 
   useEffect(() => {
     loadFavorites();
@@ -42,8 +27,9 @@ export default function Favorites() {
     setLoading(true);
     try {
       const res = isSharedView
-        ? await fetch(`/favorite/share/${shareId}`)
-        : await authFetch("/favorite");
+  ? await fetch(`${API_URL}/favorite/share/${shareId}`)
+  : await authFetch("/favorite");
+
 
       if (!res.ok) throw new Error("Failed to load favorites");
 
@@ -71,6 +57,24 @@ export default function Favorites() {
     }
   }
 
+  const handleCreateShareLink = async () => {
+  try {
+    const res = await authFetch("/favorite/share/create", {
+  method: "POST",
+});
+
+
+    if (!res.ok) throw new Error("Failed to create share link");
+
+    const data = await res.json();
+    setShareUrl(data.shareUrl);
+  } catch (err) {
+    console.error("Failed to create share link", err);
+  }
+};
+
+
+
   async function handleRemove(favoriteId) {
     if (!window.confirm("Remove from favorites?")) return;
 
@@ -94,9 +98,13 @@ export default function Favorites() {
     <div className="favorites-page">
       <h2>{isSharedView ? "Shared Favorites" : "My Favorites"}</h2>
 
-      {sharedEmail && <p>Shared by {sharedEmail}</p>}
+      {sharedEmail && (
+        <p className="shared-by">
+          Shared by <strong>{sharedEmail}</strong>
+        </p>
+      )}
 
-      {!isSharedView && favorites.length > 0 && (
+      {!isSharedView && user && favorites.length > 0 && (
         <div className="share-section">
           <button className="btn-share" onClick={handleCreateShareLink}>
             Share favorites
@@ -104,6 +112,7 @@ export default function Favorites() {
 
           {shareUrl && (
             <input
+              className="share-link-input"
               type="text"
               value={shareUrl}
               readOnly
