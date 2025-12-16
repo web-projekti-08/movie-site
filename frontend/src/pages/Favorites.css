@@ -73,3 +73,12 @@
   font-size: 14px;
   margin: 0;
 }
+
+.btn-share {
+  margin-bottom: 15px;
+  border-radius: 10px;
+}
+
+.favorites-page h2 {
+  margin-bottom: 30px;
+}

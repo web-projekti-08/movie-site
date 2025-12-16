@@ -48,3 +48,8 @@
 .review-movie-title {
   color: #ffffff;
 }
+
+.btn-danger {
+  background-color: red;
+  margin-left: 4px;
+}

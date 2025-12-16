@@ -6,6 +6,9 @@
   font-family: Arial, sans-serif;
   color: #fff;
 }
+.app-container h1 {
+  color:black;
+}
 
 h1 {
   text-align: center;
@@ -44,7 +47,7 @@ button {
   padding: 10px 15px;
   border-radius: 6px;
   border: none;
-  background: #3498db;
+  background: #0d6efd;
   cursor: pointer;
   color: #fff;
   transition: 0.2s;

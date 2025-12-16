@@ -58,10 +58,11 @@ export async function deleteGroup(groupId) {
 // GROUP MEMBER
 export async function getGroupMembers(groupId) {
   const result = await pool.query(`
-    SELECT user_id, role
-    FROM group_members
+    SELECT g.user_id, g.role, u.email
+    FROM group_members g
+    JOIN users u ON u.user_id = g.user_id
     WHERE group_id = $1
-    AND (role = 'owner' OR role = 'member')`, 
+    AND g.role IN ('owner', 'member')`, 
     [groupId]
   );
 
