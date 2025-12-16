@@ -9,7 +9,7 @@ export default function ReviewList({ reviews }) {
     <div className="review-list">
       {reviews.map((r, i) => (
         <div key={i} className="review-item">
-          <strong>{r.email || "Anonymous"}:</strong>
+          <strong>{r.email || "Anonymous"} </strong>
           <div className="review-stars">
             {[1, 2, 3, 4, 5].map((star) => (
   <span
@@ -25,6 +25,13 @@ export default function ReviewList({ reviews }) {
 ))}
 
           </div>
+          <p className="review-date">
+            { new Date(r.posted_at).toLocaleString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </p>
           <p>{r.review_text}</p>
         </div>
       ))}

@@ -17,39 +17,37 @@ import JoinableGroupsList from "../components/JoinableGroupsList";
 import CreatedGroupsList from "../components/CreatedGroupsList";
 import CreateGroupForm from "../components/CreateGroupForm";
 import RequestsList from "../components/RequestsList";
-import './GroupsPage.css';
+import "./GroupsPage.css";
 
 export default function GroupsPage() {
   const { user } = useAuth();
 
-  const [groups, setGroups] = useState([]); // KÄYTTÄJÄN LUOMAT RYHMÄT
-  const [allGroups, setAllGroups] = useState([]); // KAIKKI RYHMÄT
+  const [groups, setGroups] = useState([]);
+  const [allGroups, setAllGroups] = useState([]);
   const [requests, setRequests] = useState([]);
   const [showCreateForm, setShowCreateForm] = useState(false);
 
   async function loadGroups() {
-    if (!user) return;
-
     const all = await getGroups();
     setAllGroups(all);
 
-    // LUODUT RYHMÄT
-    const created = all.filter((g) => g.owner_id === user.userId);
-    setGroups(created);
+    if (user) {
+      const created = all.filter((g) => g.owner_id === user.userId);
+      setGroups(created);
 
-    // LIITTYMISPYYNNÖT HAETAAN KAIKILLE KÄYTTÄJÄN LUOMILLE RYHMILLE
-    const reqs = [];
-    for (const g of created) {
-      const r = await getRequests(g.group_id).catch(() => []);
-      reqs.push(
-        ...r.map((x) => ({
-          ...x,
-          groupName: g.group_name,
-          groupId: g.group_id,
-        }))
-      );
+      const reqs = [];
+      for (const g of created) {
+        const r = await getRequests(g.group_id).catch(() => []);
+        reqs.push(
+          ...r.map((x) => ({
+            ...x,
+            groupName: g.group_name,
+            groupId: g.group_id,
+          }))
+        );
+      }
+      setRequests(reqs);
     }
-    setRequests(reqs);
   }
 
   useEffect(() => {
@@ -65,24 +63,28 @@ export default function GroupsPage() {
       </div>
 
       {/* Your Groups */}
-      <div className="groups-section">
-        <h3>Your Groups</h3>
-        <CreatedGroupsList
-          groups={groups}
-          onDelete={async (id) => {
-            await deleteGroup(id);
-            loadGroups();
-          }}
-        />
-        <button
-          className="btn-create-group"
-          onClick={() => setShowCreateForm(true)}
-        >
-          Create New Group
-        </button>
-      </div>
+      {user && (
+        <div className="groups-section">
+          <h3>Your Groups</h3>
 
-      {/* Create Form Modal */}
+          <CreatedGroupsList
+            groups={groups}
+            onDelete={async (id) => {
+              await deleteGroup(id);
+              loadGroups();
+            }}
+          />
+
+          <button
+            className="btn-create-group"
+            onClick={() => setShowCreateForm(true)}
+          >
+            Create New Group
+          </button>
+        </div>
+      )}
+
+      {/* Create Group Modal */}
       {showCreateForm && (
         <div className="create-group-modal">
           <CreateGroupForm
@@ -95,19 +97,23 @@ export default function GroupsPage() {
         </div>
       )}
 
-      {/* Requests */}
-      {requests.length > 0 && (
+      {/* Join Requests */}
+      {user && requests.length > 0 && (
         <div className="requests-section">
           <h3>Join Requests</h3>
           <RequestsList
             requests={requests}
             onAccept={async (gid, uid) => {
               await acceptRequest(gid, uid);
-              setRequests((prev) => prev.filter((r) => r.user_id !== uid));
+              setRequests((prev) =>
+                prev.filter((r) => r.user_id !== uid)
+              );
             }}
             onReject={async (gid, uid) => {
               await rejectRequest(gid, uid);
-              setRequests((prev) => prev.filter((r) => r.user_id !== uid));
+              setRequests((prev) =>
+                prev.filter((r) => r.user_id !== uid)
+              );
             }}
           />
         </div>
@@ -115,4 +121,3 @@ export default function GroupsPage() {
     </div>
   );
 }
-
