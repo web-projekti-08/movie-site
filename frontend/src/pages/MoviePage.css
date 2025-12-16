@@ -45,3 +45,27 @@
 .review-section h3 {
   margin-bottom: 10px;
 }
+
+/* ReviewForm star rating fix */
+.review-form .star-rating {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.review-form .star {
+  background: none !important;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #555;
+  padding: 0;
+}
+
+.review-form .star.selected {
+  color: gold;
+}
+
+.review-form .star:hover {
+  color: gold;
+}

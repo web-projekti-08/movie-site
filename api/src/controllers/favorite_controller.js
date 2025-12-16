@@ -55,10 +55,10 @@ export async function createShareId(req, res, next) {
     if (!shareId || shareId.length === 0) {
       return res.status(404).json({ error: "Could not create share "});
     }
-    res.status(200).json({
-      shareId,
-      shareUrl: `${process.env.FRONTEND_URL}/favorites/share/${shareId}`
-    });
+    res.status(200).json({ shareId,
+    shareUrl: `${process.env.FRONTEND_URL}/favorites/share/${shareId}`
+     });
+
   } catch (err) {
     next(err);
   }

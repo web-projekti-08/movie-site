@@ -17,25 +17,24 @@ import JoinableGroupsList from "../components/JoinableGroupsList";
 import CreatedGroupsList from "../components/CreatedGroupsList";
 import CreateGroupForm from "../components/CreateGroupForm";
 import RequestsList from "../components/RequestsList";
+import "./GroupsPage.css";
 
 export default function GroupsPage() {
   const { user } = useAuth();
 
-  const [groups, setGroups] = useState([]); // KÄYTTÄJÄN LUOMAT RYHMÄT
-  const [allGroups, setAllGroups] = useState([]); // KAIKKI RYHMÄT
+  const [groups, setGroups] = useState([]);
+  const [allGroups, setAllGroups] = useState([]);
   const [requests, setRequests] = useState([]);
   const [showCreateForm, setShowCreateForm] = useState(false);
 
   async function loadGroups() {
     const all = await getGroups();
     setAllGroups(all);
-    
+
     if (user) {
-      // LUODUT RYHMÄT
       const created = all.filter((g) => g.owner_id === user.userId);
       setGroups(created);
 
-      // LIITTYMISPYYNNÖT HAETAAN KAIKILLE KÄYTTÄJÄN LUOMILLE RYHMILLE
       const reqs = [];
       for (const g of created) {
         const r = await getRequests(g.group_id).catch(() => []);
@@ -56,55 +55,69 @@ export default function GroupsPage() {
   }, [user]);
 
   return (
-    <> 
-      {/* KAIKKI RYHMÄT LISTA, KÄYTTÄÄ JoinableGroupsList KOMPONENTTIA */ }
-      <JoinableGroupsList groups={allGroups} />
+    <div className="groups-page">
+      {/* All Groups */}
+      <div className="groups-section">
+        <h3>All Groups</h3>
+        <JoinableGroupsList groups={allGroups} />
+      </div>
 
-      {/* KÄYTTÄJÄN LUOMAT RYHMÄT LISTA, KÄYTTÄÄ CreatedGroupsList KOMPONENTTIA */ }
+      {/* Your Groups */}
       {user && (
-        <CreatedGroupsList
-          groups={groups}
-          onDelete={async (id) => {
-            await deleteGroup(id);
-            loadGroups();
-          }}
-        />
-        )}
-      {user && (
-        <button
-          className="btn btn-primary btn-sm mt-4"
-          onClick={() => setShowCreateForm(true)}
-        >
-          Create new group
-        </button>
+        <div className="groups-section">
+          <h3>Your Groups</h3>
+
+          <CreatedGroupsList
+            groups={groups}
+            onDelete={async (id) => {
+              await deleteGroup(id);
+              loadGroups();
+            }}
+          />
+
+          <button
+            className="btn-create-group"
+            onClick={() => setShowCreateForm(true)}
+          >
+            Create New Group
+          </button>
+        </div>
       )}
-    
-      {/* UUDEN RYHMÄN LUONTI FORM, KÄYTTÄÄ JoinableGroupsList KOMPONENTTIA */ }
+
+      {/* Create Group Modal */}
       {showCreateForm && (
-        <CreateGroupForm
-          onClose={() => setShowCreateForm(false)}
-          onCreate={async (name, desc) => {
-            await createGroup(name, desc);
-            loadGroups();
-          }}
-        />
+        <div className="create-group-modal">
+          <CreateGroupForm
+            onClose={() => setShowCreateForm(false)}
+            onCreate={async (name, desc) => {
+              await createGroup(name, desc);
+              loadGroups();
+            }}
+          />
+        </div>
       )}
 
-      {/* LIITTYMISPYYNNÖT LISTA, KÄYTTÄÄ RequestsList KOMPONENTTIA */ }
-      {user && (
-        <RequestsList
-          requests={requests}
-          onAccept={async (gid, uid) => {
-            await acceptRequest(gid, uid);
-            setRequests((prev) => prev.filter((r) => r.user_id !== uid));
-          }}
-          onReject={async (gid, uid) => {
-            await rejectRequest(gid, uid);
-            setRequests((prev) => prev.filter((r) => r.user_id !== uid));
-          }}
-        />
+      {/* Join Requests */}
+      {user && requests.length > 0 && (
+        <div className="requests-section">
+          <h3>Join Requests</h3>
+          <RequestsList
+            requests={requests}
+            onAccept={async (gid, uid) => {
+              await acceptRequest(gid, uid);
+              setRequests((prev) =>
+                prev.filter((r) => r.user_id !== uid)
+              );
+            }}
+            onReject={async (gid, uid) => {
+              await rejectRequest(gid, uid);
+              setRequests((prev) =>
+                prev.filter((r) => r.user_id !== uid)
+              );
+            }}
+          />
+        </div>
       )}
-    </>
+    </div>
   );
 }
-
