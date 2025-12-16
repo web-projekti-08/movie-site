@@ -4,6 +4,10 @@
   padding: 20px;
 }
 
+.groups-page h2 {
+  margin-bottom: 30px;
+}
+
 @media (max-width: 768px) {
   .groups-page {
     padding: 12px;
@@ -63,7 +67,7 @@
 
 .group-card p {
   margin: 0;
-  color: #bbb;
+  color: #bbbbbb;
   font-size: 14px;
 }
 
@@ -71,7 +75,7 @@
 .btn-create-group {
   margin-top: 20px;
   padding: 12px 24px;
-  background: #3498db;
+  background: #0d6efd;
   color: white;
   border: none;
   border-radius: 8px;
@@ -80,12 +84,13 @@
 }
 
 .btn-create-group:hover {
-  background: #2179b5;
+  background: #47687e;
 }
 
 /* REQUESTS */
 .requests-section {
   background: #1b1b1b;
+  color: white;
   border-radius: 12px;
   padding: 30px;
   margin-top: 20px;
@@ -162,4 +167,16 @@
 .create-group-form textarea:focus {
   outline: none;
   border-color: #3498db;
+}
+
+.small-card {
+  margin: 6px;
+}
+
+.mt-4 h4 {
+  color:#0d6efd;
+}
+
+.card-body p {
+  color: #6d6d6d;
 }
