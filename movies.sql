@@ -1,12 +1,3 @@
-DROP TABLE IF EXISTS group_members CASCADE;
-DROP TABLE IF EXISTS groups CASCADE;
-DROP TABLE IF EXISTS users CASCADE;
-DROP TABLE IF EXISTS review CASCADE;
-DROP TABLE IF EXISTS favorite CASCADE;
-DROP TABLE IF EXISTS member_role CASCADE;
-DROP TABLE IF EXISTS group_content CASCADE;
-DROP TABLE IF EXISTS group_chat CASCADE;
-
 CREATE TABLE IF NOT EXISTS users (
   user_id SERIAL PRIMARY KEY,
   share_id TEXT UNIQUE,
@@ -53,54 +44,3 @@ CREATE TABLE favorite (
   media_id INT NOT NULL,
   added_at TIMESTAMP DEFAULT NOW()
 );
-
--- TEST DATA
-INSERT INTO
-  users (email, password)
-VALUES
-  ('alice@example.com', 'password123'),
-  ('bob@example.com', 'hunter2'),
-  ('charlie@example.com', 'qwerty'),
-  ('diana@example.com', 'passw0rd');
-
-INSERT INTO
-  groups (group_name, description, owner_id)
-VALUES
-  (
-    'Movie Maniacs',
-    'A group for people obsessed with movies',
-    1
-  ),
-  (
-    'Sci-Fi Sundays',
-    'We watch sci-fi movies every weekend',
-    2
-  ),
-  (
-    'Indie Lovers',
-    'For fans of indie and arthouse cinema',
-    3
-  );
-
-INSERT INTO
-  group_members (group_id, user_id, role)
-VALUES
-  (1, 1, 'owner'),
-  (1, 2, 'member'),
-  (1, 3, 'requested'),
-  (2, 2, 'owner'),
-  (2, 4, 'member'),
-  (3, 3, 'owner'),
-  (3, 1, 'member'),
-  (3, 4, 'requested');
-
-INSERT INTO
-  review (
-    media_id,
-    user_id,
-    review_text,
-    rating,
-    posted_at
-  )
-VALUES
-  (603, 1, 'Test review', 5, NOW());

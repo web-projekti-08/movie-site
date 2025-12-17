@@ -94,8 +94,9 @@ export default function GroupDetails() {
   if (!group) return <p>Group not found</p>;
 
   // TARKISTETAAN ONKO KÄYTTÄJÄ OMISTAJA TAI JÄSEN
-  const userIsOwner = isOwnerInGroup(group.group_id);
-  const userIsMember = isMemberInGroup(group.group_id);
+  const userIsOwner = user?.userId === group.owner_id;
+  const userIsMember =
+    userIsOwner || isMemberInGroup(group.group_id);
 
    return (
     <div className="group-details-page">
