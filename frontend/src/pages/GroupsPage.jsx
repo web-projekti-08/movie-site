@@ -56,17 +56,15 @@ export default function GroupsPage() {
 
   return (
     <div className="groups-page">
+      <h2>Groups</h2>
       {/* All Groups */}
       <div className="groups-section">
-        <h3>All Groups</h3>
         <JoinableGroupsList groups={allGroups} />
       </div>
 
       {/* Your Groups */}
       {user && (
         <div className="groups-section">
-          <h3>Your Groups</h3>
-
           <CreatedGroupsList
             groups={groups}
             onDelete={async (id) => {

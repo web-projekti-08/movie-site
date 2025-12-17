@@ -95,8 +95,7 @@ export default function GroupDetails() {
 
   // TARKISTETAAN ONKO KÄYTTÄJÄ OMISTAJA TAI JÄSEN
   const userIsOwner = user?.userId === group.owner_id;
-  const userIsMember =
-    userIsOwner || isMemberInGroup(group.group_id);
+  const userIsMember = userIsOwner || isMemberInGroup(group.group_id);
 
    return (
     <div className="group-details-page">
@@ -109,7 +108,7 @@ export default function GroupDetails() {
       {/* Members (if member or owner) */}
       {(userIsOwner || userIsMember) && (
         <div className="group-members-section">
-          <h4>Members</h4>
+          
           <GroupMembers
             members={members}
             ownerId={group.owner_id}

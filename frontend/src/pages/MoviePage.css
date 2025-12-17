@@ -16,6 +16,16 @@
   margin-bottom: 30px;
 }
 
+.movie-details-poster {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.movie-details-title {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
 .button-row {
   display: flex;
   gap: 15px;
@@ -46,6 +56,33 @@
   margin-bottom: 10px;
 }
 
+.review-item {
+  border-top: 1px solid #999;
+  padding-top: var(--spacing-sm);
+}
+
+.review-date {
+  font-size: 0.7rem;
+  color: #999;
+}
+
+.review-submit {
+  display: flex;
+  flex-direction: column;
+}
+
+.review-text-field {
+  height: 8rem;
+  overflow: scroll;
+}
+
+.review-submit-btn {
+  width: 10rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--spacing-md);
+}
+
 /* ReviewForm star rating fix */
 .review-form .star-rating {
   display: flex;
@@ -68,4 +105,14 @@
 
 .review-form .star:hover {
   color: gold;
+}
+
+.app-container h1 {
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.group-select {
+  width: 15rem;
+  margin-right: var(--spacing-md);
 }

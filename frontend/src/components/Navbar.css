@@ -9,6 +9,10 @@
   gap: 12px;
 }
 
+.nav-left {
+  font-size: 18px;
+}
+
 .nav-left,
 .nav-right {
   display: flex;
@@ -33,6 +37,8 @@
   font-weight: bold;
   color: white;
   text-decoration: none;
+  margin-left: 15px;
+  transition: color 0.2s ease, transform 0.2 ease;
 }
 
 .nav-link {
@@ -41,7 +47,21 @@
   font-weight: 500;
 }
 
-.nav-link:hover,
+/*.nav-link:hover {
+  color:rgb(83, 83, 83);
+  transform: scale(1.05);
+} 
+*/
 .nav-link.active {
-  color: #fff;
+  text-decoration: underline;
+} 
+
+.nav-user {
+  color: white;
+}
+
+.nav-user button {
+  margin-left: 10px;
+  border-radius: 10px;
+  background-color: #0d6efd;
 }
