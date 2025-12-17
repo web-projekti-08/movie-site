@@ -16,7 +16,7 @@ services:
       - key: TMDB_API_KEY
         secure: true
       - key: FRONTEND_URL
-        value: https://movie-site.onrender.com
+        value: https://movie-site-frontend-bgje.onrender.com/
 
 databases:
   - name: movie-site-db
