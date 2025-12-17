@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Home.css";
 
 export default function Home() {
@@ -17,6 +18,7 @@ export default function Home() {
   const [nowPlayingError, setNowPlayingError] = useState("");
 
   const API_BASE = process.env.REACT_APP_API_URL || "";
+  const navigate = useNavigate();
 
   // Fetch now playing movies
   useEffect(() => {
@@ -164,7 +166,7 @@ export default function Home() {
             key={m.id}
             className="movie-card"
             style={{ cursor: "pointer" }}
-            onClick={() => window.location.href = `/movie/${m.id}`}
+            onClick={() => navigate(`/movie/${m.id}`)}
           >
             {m.poster_path && (
               <img
