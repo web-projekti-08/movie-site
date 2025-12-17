@@ -26,8 +26,13 @@ export default function MovieCard({ movie }) {
         </div>
       )}
       {/* TIEDOT */}
-      <h5>{movie.title}</h5>
-      {movie.release_date && <p>{movie.release_date}</p>}
+      <h5 className="movie-card-title">{movie.title}</h5>
+{movie.release_date && (
+  <p className="movie-card-date">
+    {new Date(movie.release_date).getFullYear()}
+  </p>
+)}
+
     </div>
   );
 }

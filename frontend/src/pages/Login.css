@@ -1,5 +1,6 @@
 .auth-container {
   width: 380px;
+  max-width: 90%;
   margin: 100px auto;
   padding: 30px;
   background: #1c1c1c;
@@ -7,6 +8,13 @@
   text-align: center;
   color: white;
   box-shadow: 0 0 15px rgba(0,0,0,0.4);
+}
+
+@media (max-width: 480px) {
+  .auth-container {
+    margin: 40px auto;
+    padding: 20px;
+  }
 }
 
 .auth-container h2 {
@@ -24,7 +32,7 @@
   padding: 12px;
   border-radius: 6px;
   border: none;
-  font-size: 15px;
+  font-size: 16px;
   background: #2b2b2b;
   color: #fff;
 }
@@ -62,6 +70,7 @@
   color: #3498db;
   text-decoration: none;
 }
+
 .auth-switch a:hover {
   text-decoration: underline;
 }

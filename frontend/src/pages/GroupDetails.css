@@ -1,0 +1,58 @@
+.group-details-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .group-details-page {
+    padding: 12px;
+  }
+}
+
+/* HEADER */
+.group-header {
+  background: #1b1b1b;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 20px;
+}
+
+.group-header h2 {
+  margin-bottom: 10px;
+}
+
+.group-header p {
+  color: #bbb;
+}
+
+/* SECTIONS */
+.group-members-section,
+.group-content-section,
+.join-button-section {
+  background: #1b1b1b;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 20px;
+}
+
+.group-members-section h4,
+.group-content-section h4 {
+  border-bottom: 1px solid #333;
+  padding-bottom: 10px;
+}
+
+/* MOVIES */
+.movies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .movies-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}
+

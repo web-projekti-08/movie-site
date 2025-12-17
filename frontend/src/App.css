@@ -1,265 +1,66 @@
-/* =========================
-   GLOBAALIT MUUTTUJAT
-========================= */
 :root {
-  --font-family: sans-serif;
-  --font-size-base: 1rem;
-  --border-radius: 4px;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 2rem;
-
-  /* EHKÄ TULEVAISUUTTA VARTEN? */
-  --color-primary: ;
-  --color-secondary: ;
-  --color-success: ;
-  --color-error: ;
-  --color-bg: ;
-  --color-card-bg: ;
-  --color-text: ;
+  --bg-main: #0f0f0f;
+  --bg-card: #1b1b1b;
+  --bg-card-light: #232323;
+  --text-main: #ffffff;
+  --text-muted: #aaaaaa;
+  --accent: #3498db;
+  --accent-hover: #2179b5;
+  --danger: #dc3545;
 }
 
-/* =========================
-   GLOBAALIT TYYLIT
-========================= */
-html, body {
-  height: 100%;
+body {
   margin: 0;
-  padding: 0;
-  font-family: var(--font-family);
-  font-size: var(--font-size-base);
+  background: var(--bg-main);
+  color: var(--text-main);
+  font-family: Arial, sans-serif;
 }
 
-#root {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
 }
 
-main {
-  flex: 1;
-  padding-bottom: var(--spacing-lg);
+@media (max-width: 768px) {
+  .container {
+    padding: 12px;
+  }
 }
 
-/* =========================
-   BUTTONIT
-========================= */
-.btn {
-  padding: var(--spacing-sm) var(--spacing-md);
-  font-size: var(--font-size-base);
+h1, h2, h3, h4 {
+  color: var(--text-main);
+}
+
+p {
+  color: var(--text-muted);
+}
+
+button {
   border: none;
-  border-radius: var(--border-radius);
+  border-radius: 8px;
   cursor: pointer;
-}*/
-
-.btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
-/* =========================
-   INPUTIT & LOMAKKEET
-========================= */
-input, select, textarea {
-  font-family: inherit;
-  font-size: inherit;
-  padding: var(--spacing-sm);
-  border-radius: var(--border-radius);
-  border: 1px solid #ccc;
+button.primary {
+  background: var(--accent);
+  color: white;
 }
 
-input:focus, select:focus, textarea:focus {
-  outline: none;
-  border-color: #999;
+button.primary:hover {
+  background: var(--accent-hover);
 }
 
-/* =========================
-   HAKUOSIO
-========================= */
-.search-section {
-  margin-bottom: var(--spacing-lg);
-  padding: var(--spacing-md);
-  border-radius: var(--border-radius);
+* {
+  box-sizing: border-box;
 }
 
-.search-input-row {
-  display: flex;
-  gap: var(--spacing-sm);
-  margin-bottom: var(--spacing-md);
-}
-
-.search-input {
-  flex: 1;
-}
-
-/* =========================
-   ERROR JA SUCCESS VIESTIT
-========================= */
-.error-message {
-  color: red;
-  margin-top: var(--spacing-sm);
-}
-
-.success-msg {
-  padding: var(--spacing-sm);
-  border-radius: 6px;
-  animation: fadeOut 1s ease 2s forwards;
-}
-
-@keyframes fadeOut {
-  to { opacity: 0; height: 0; padding: 0; }
-}
-
-/* =========================
-   ELOKUVA KORTIT JA RUUDUKOT
-========================= */
-.movies-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: var(--spacing-md);
-}
-
-.movie-card {
-  padding: var(--spacing-md);
-  border-radius: var(--border-radius);
-  border: 1px solid #ddd;
-}
-
-.movie-poster {
-  width: 100%;
+img {
+  max-width: 100%;
   height: auto;
-  border-radius: var(--border-radius);
-  margin-bottom: var(--spacing-sm);
 }
 
-.movie-title {
-  margin: 0.25rem 0;
-  font-weight: bold;
-}
-
-.movie-year {
-  font-size: 0.85rem;
-  color: #666;
-}
-
-.movie-description {
-  font-size: 0.85rem;
-  margin-bottom: 0;
-}
-
-/* =========================
-   ELOKUVA SIVU
-========================= */
-.movie-page {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
-}
-
-.movie-details {
-  display: flex;
-  flex-direction: row;
-  gap: var(--spacing-lg);
-}
-
-.movie-details-info {
-  flex: 1;
-}
-
-.movies-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 16px;
-  margin-top: 1rem;
-}
-
-.movie-card {
-  background: #f8f9fa;
-  padding: 8px;
-  border-radius: 6px;
-  text-align: center;
-}
-
-
-.button-row {
-  display: flex;
-  gap: var(--spacing-sm);
-  margin-top: var(--spacing-md);
-}
-
-/* =========================
-   ARVOSTELUT ELOKUVA SIVULLA
-========================= */
-.review-section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-
-.review-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-}
-
-.review-item {
-  border-top: 1px solid #eee;
-  padding-top: var(--spacing-sm);
-}
-
-/* TÄHTIEN TYYLI */
-.review-stars {
-  display: inline-block;
-}
-
-.star {
-  font-size: 1rem;
-}
-
-.star.selected {
-  font-size: 1rem;
-}
-
-/* ARVOSTELUN TÄHTIEN TYYLI */
-.star-rating {
-  display: flex;
-  gap: 0.25rem;
-}
-
-.star-rating .star {
-  font-size: 1.5rem;
-  cursor: pointer;
-  background: none;
-  border: none;
-  padding: 0;
-  color: #ccc;
-}
-
-.star-rating .star.selected {
-  /* TÄSSÄ VOI MUUTTAA VAIKKA VÄRIÄ JNE */
-  font-size: 1.5rem;
-  color: gold;
-}
-
-/* =========================
-   FOOTER
-========================= */
 footer {
   text-align: center;
-  padding: var(--spacing-md);
+  padding: 1rem;
 }
-
-/* =========================
-   JOIN GROUP KORTIT
-========================= */
-.join-groups-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem; /* väli korttien väliin */
-}
-
-.join-groups-wrapper .card {
-  flex: 1 1 calc(20% - 1rem); /* viisi korttia riviin */
-  max-width: calc(20% - 1rem);
-}
-

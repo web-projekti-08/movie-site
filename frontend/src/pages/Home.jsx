@@ -91,7 +91,7 @@ export default function Home() {
   const display = searchResults !== null ? searchResults : nowPlaying;
 
   // Helper function for showing movie ratings
-  const getMovieRating = (m) => m.vote_average ?? m.rating ?? "—";
+  const getMovieRating = (m) => m.vote_average ?? Math.round(m.rating*10)/10 ?? "—";
 
   return (
     <div className="app-container">
