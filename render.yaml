@@ -1,8 +1,8 @@
 services:
   - type: web
-    name: movie-site-api
+    name: movie-site
     env: docker
-    dockerfilePath: api/Dockerfile
+    dockerfilePath: Dockerfile
     branch: main
     plan: free
     envVars:
@@ -11,26 +11,12 @@ services:
       - key: DATABASE_URL
         fromDatabase:
           name: movie-site-db
-      - key: FRONTEND_URL
-        value: https://movie-site-frontend.onrender.com
       - key: JWT_SECRET
         secure: true
       - key: TMDB_API_KEY
         secure: true
-      - key: PORT
-        value: "3000"
-
-  - type: static
-    name: movie-site-frontend
-    env: static
-    branch: main
-    buildCommand: cd frontend && npm ci && npm run build
-    publishPath: frontend/build
-    envVars:
-      - key: NODE_ENV
-        value: production
-      - key: REACT_APP_API_URL
-        value: https://movie-site-api.onrender.com
+      - key: FRONTEND_URL
+        value: https://movie-site.onrender.com
 
 databases:
   - name: movie-site-db

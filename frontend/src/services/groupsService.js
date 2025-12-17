@@ -1,6 +1,5 @@
 import { authFetch } from './authFetch'
-
-const API_URL = process.env.REACT_APP_API_URL
+import { API_URL } from './authApi'
 
 // GET kaikki ryhmät
 export async function getGroups() {
