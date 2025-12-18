@@ -1,7 +1,36 @@
-## Elokuvasovellus
+## Movie Site
 
-Projektin toimeksiantona on toteuttaa leffaharrastajille websivusto. Sovellus hyödyntää avoimen datan rajapintaa (The movide database). Sovelluksen selaimessa toimiva osuus toteutetaan React- ja palvelin Node-tekniikalla. Tietokantana käytetään PostgreSQL-tietokantaa.
+Web application for movie enthusiasts. Users can browse movies, create accounts, write reviews, manage favorites, and participate in groups.
+The application uses The Movie Database (TMDB) API for movie data.
 
+The frontend is built with React, the backend with Node.js + Express, and data is stored in a PostgreSQL database.
+The entire project is containerized using Docker.
+
+## Deployed project available at
+https://movie-site-frontend-bgje.onrender.com/
+
+## Tech Stack
+
+### Frontend
+ - React
+ - React Router
+ - Fetch API
+ - Runs in Docker
+
+### Backend
+ - Node.js
+ - Express
+ - JWT authentication (access + refresh tokens)
+ - Runs in Docker
+
+### Database
+ - PostgreSQL 16
+ - Separate databases for development and testing
+
+### Testing
+ - Jest
+ - Supertest
+ - Integration tests against a real test database
 
 ## Testing
 ### Local testing with npm:
